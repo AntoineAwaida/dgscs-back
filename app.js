@@ -7,7 +7,7 @@ var logger = require('morgan');
 var bluebird = require('bluebird');
 var mongoose = require('mongoose');
 
-//require('./config/passport');
+require('./config/passport');
 
 // Connecting to DDB
 mongoose.Promise = bluebird
