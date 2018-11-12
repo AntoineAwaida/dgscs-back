@@ -2,7 +2,7 @@ var express = require('express');
 
 var router = express.Router();
 
-var AuthController = require('../../controllers/users/auth.controller');
+var AuthController = require('../../../controllers/users/auth.controller');
 var jwt = require('express-jwt');
 
 var auth = jwt({

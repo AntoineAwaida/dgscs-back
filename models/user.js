@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
 const SALT_WORK_FACTOR = 10;
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 var UserSchema = new mongoose.Schema({
     first_name : String,
