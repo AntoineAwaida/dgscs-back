@@ -11,7 +11,7 @@ var UserSchema = new mongoose.Schema({
     password: String,
 });
 
-
+//commentaire de test
 
 UserSchema.pre('save', function(next) {
     let user = this;
