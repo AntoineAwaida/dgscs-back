@@ -11,11 +11,11 @@ require('./config/passport');
 
 // Connecting to DDB
 mongoose.Promise = bluebird
-mongoose.connect('mongodb://127.0.0.1:27017/dgscs', { useNewUrlParser: true })
+mongoose.connect('mongodb+srv://awaidaantoine:raphael8600A@dgs-avpa0.gcp.mongodb.net/test?retryWrites=true', { useNewUrlParser: true })
 .then(()=> { console.log(`Succesfully Connected to the
-Mongodb Database  at URL : mongodb://127.0.0.1:27017/dgscs`)})
+Mongodb Atlas database!`)})
 .catch(()=> { console.log(`Error Connecting to the Mongodb 
-Database at URL : mongodb://127.0.0.1:27017/dgscs`)})
+Database Atlas database...`)})
 
 var app = express();
 
