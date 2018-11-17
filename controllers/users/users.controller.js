@@ -7,3 +7,17 @@ exports.getUsers = async function(req,res) {
         res.json(users);
       })
 }
+
+exports.getUser = async function(req,res,err){
+    if(err) return next(err);
+
+    console.log("coucou")
+
+    UserModel.findById(req.payload._id, function(err,user){
+
+        if(err) return next(err);
+
+        res.json(user);
+
+    })
+}
