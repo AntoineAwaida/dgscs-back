@@ -13,21 +13,30 @@ exports.create = async function(req,res,err) {
       return res.status(200).json("Le groupe a bien été créé!");
 }
 
+
 exports.getAll = async function(req,res,err) {
 
-  GroupModel.find((err,groups) => {
-    if (err) return next(err);
+  try{
+
+  let groups = await GroupModel.find();
+
+  for(let i=0; i<groups.length; i++){
+
+    let group = groups[i]
     let users = [];
-    groups.forEach(function(e){
-      e.members.forEach(function(member){
-        UserModel.findById(member,function(err,user){
-          users.push(user);
-        })
-      })
-      
-    })
-    console.log(users)
-    res.json(groups);
-  })
+    let members = group.members
+    for(let j=0; j<members.length; j++){
+      let member = members[j]
+      let user = await UserModel.findById(member).select({ 'password': false, '__v' : false })
+      users.push(user)
+    }
+    group.members = users
+  }
+}
+catch(e){
+  res.status(500).json({ "status": 500, "data": null, "message": "Acces au groupes impossible" })
+}
+  console.log(groups)
+  res.json(groups);
 
 }
