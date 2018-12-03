@@ -9,7 +9,7 @@ exports.create = async function(req,res,err) {
           return res.status(500).send(err);
         }
       })
-      return res.status(200).send("Le groupe a bien été créé!");
+      return res.status(200).json("Le groupe a bien été créé!");
 }
 
 exports.getAll = async function(req,res,err) {

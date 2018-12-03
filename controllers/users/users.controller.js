@@ -1,4 +1,4 @@
-const UserModel = require('../../models/user');
+const UserModel = require('../../models/user.js');
 
 
 exports.getUsers = async function(req,res) {
@@ -8,15 +8,11 @@ exports.getUsers = async function(req,res) {
       })
 }
 
-exports.getUser = async function(req,res,err){
-    if(err) return next(err);
+exports.getUser = async function(req,res){
+    UserModel.findById(req.params.id, function(err,user){
 
-    console.log("coucou")
-
-    UserModel.findById(req.payload._id, function(err,user){
-
-        if(err) return next(err);
-
+        console.log(user)
+        
         res.json(user);
 
     })

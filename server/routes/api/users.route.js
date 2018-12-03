@@ -15,7 +15,7 @@ var auth = jwt({
 
 router.get('/getusers', auth, UsersController.getUsers);
 
-router.get('/getuser', UsersController.getUser)
+router.get('/getuser/:id', UsersController.getUser)
 
 
 router.post('/register', AuthController.register);
