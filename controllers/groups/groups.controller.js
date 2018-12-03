@@ -1,4 +1,5 @@
 const GroupModel = require('../../models/group.js')
+const UserModel = require('../../models/user.js')
 
 
 exports.create = async function(req,res,err) {
@@ -16,6 +17,16 @@ exports.getAll = async function(req,res,err) {
 
   GroupModel.find((err,groups) => {
     if (err) return next(err);
+    let users = [];
+    groups.forEach(function(e){
+      e.members.forEach(function(member){
+        UserModel.findById(member,function(err,user){
+          users.push(user);
+        })
+      })
+      
+    })
+    console.log(users)
     res.json(groups);
   })
 
