@@ -13,6 +13,21 @@ exports.create = async function (req, res, err) {
   return res.status(200).json("Le groupe a bien été créé!");
 }
 
+exports.delete = async function (req,res,err){
+
+  GroupModel.findByIdAndDelete(req.params.id, function(err,data){
+    if(err){
+      return res.status(500).send(err);
+    }
+
+    return res.status(200).json("Le groupe a bien été supprimé!")
+
+  })
+
+
+
+}
+
 
 exports.getAll = async function (req, res, err) {
 
