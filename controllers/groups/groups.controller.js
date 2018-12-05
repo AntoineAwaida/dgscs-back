@@ -13,6 +13,26 @@ exports.create = async function (req, res, err) {
   return res.status(200).json("Le groupe a bien été créé!");
 }
 
+exports.edit = async function (req,res,err) {
+
+  GroupModel.findById(req.params.id, function (err,group){
+    if (err) return res.status(500).send(err);
+
+    group.name = req.body.name;
+    group.members = req.body.members;
+
+    try{
+      group.save();
+      return res.status(200).json("Le groupe a bien été modifié!")
+    }
+    catch(e){
+      return res.status(500).json(e)
+    }
+
+  })
+
+}
+
 exports.delete = async function (req,res,err){
 
   GroupModel.findByIdAndDelete(req.params.id, function(err,data){
@@ -24,6 +44,20 @@ exports.delete = async function (req,res,err){
 
   })
 
+
+
+}
+
+exports.getOne = async function (req, res, err){
+
+  await GroupModel.findById(req.params.id, function(err,group){
+    if(err){
+      return res.status(500).send(err);
+    }
+
+    return res.status(200).json(group);
+
+  })
 
 
 }
