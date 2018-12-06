@@ -9,6 +9,7 @@ var UserSchema = new mongoose.Schema({
     last_name : String,
     email : { type : String, unique : true, required : true },
     password: String,
+    status: { type : String, required:true, enum : ['admin','active', 'pending','inactive'], default: 'pending' }
 });
 
 //commentaire de test

@@ -15,10 +15,16 @@ var auth = jwt({
 
 router.get('/getusers', auth, UsersController.getUsers);
 
+router.get('/getactiveusers', auth, UsersController.getActiveUsers);
+
 router.get('/getuser/:id', UsersController.getUser)
 
 
 router.post('/register', AuthController.register);
 router.post('/login', AuthController.login);
+
+router.get('/deactivateuser/:id', UsersController.deactivateUser);
+
+router.get('/activateuser/:id', UsersController.activateUser)
 
 module.exports = router;
