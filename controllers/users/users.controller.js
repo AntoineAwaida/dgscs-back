@@ -17,6 +17,14 @@ exports.getActiveUsers = async function(req,res) {
       });
 }
 
+exports.getPendingUsers = async function(req,res) {
+    UserModel.find({status:'pending'}).select({ 'password': false, '__v': false }).exec((err,users) => {
+        if (err) return res.status(500).send(err);
+
+        res.json(users);
+      });
+}
+
 exports.getUser = async function(req,res){
     UserModel.findById(req.params.id, function(err,user){
 

@@ -16,6 +16,7 @@ var auth = jwt({
 router.get('/getusers', auth, UsersController.getUsers);
 
 router.get('/getactiveusers', auth, UsersController.getActiveUsers);
+router.get('/getpendingusers', auth, UsersController.getPendingUsers);
 
 router.get('/getuser/:id', UsersController.getUser)
 
