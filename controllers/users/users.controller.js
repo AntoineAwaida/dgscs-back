@@ -29,21 +29,11 @@ exports.getUser = async function(req,res){
 
 exports.deactivateUser = async function(req,res){
 
-    UserModel.findById(req.params.id, function(err,user){
+    UserModel.findByIdAndUpdate(req.params.id, {status: 'inactive'}, function(err){
     
         if (err) return res.status(500).send(err);
 
-        user.status = 'inactive';
-
-        try {
-            user.save();
-            return res.status(200).json("L'utilisateur a bien été désactivé.")
-        }
-
-        catch(e){
-            return res.status(500).send(e)
-        }
-
+        return res.status(200).json("L'utilisateur a bien été désactivé.")
     })
 
 }
@@ -51,20 +41,11 @@ exports.deactivateUser = async function(req,res){
 
 exports.activateUser = async function(req,res){
 
-    UserModel.findById(req.params.id, function(err,user){
+    UserModel.findByIdAndUpdate(req.params.id, {status: 'active'}, function(err){
     
         if (err) return res.status(500).send(err);
 
-        user.status = 'active';
-
-        try {
-            user.save();
-            return res.status(200).json("L'utilisateur a bien été activé.")
-        }
-
-        catch(e){
-            return res.status(500).send(e)
-        }
+        return res.status(200).json("L'utilisateur a bien été activé.")
 
     })
 

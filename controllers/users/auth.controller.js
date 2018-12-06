@@ -42,6 +42,7 @@ exports.register = async function (req, res) {
 
 exports.login = function (req, res) {
 
+
     passport.authenticate('local', function (err, user, info) {
 
         var token;
@@ -53,6 +54,7 @@ exports.login = function (req, res) {
 
         // If a user is found
         if (user) {
+
 
             var token = user.generateJwt();
             return res.status(200).json({ "status": 200, "token": token, "message": "Successfully connected" });

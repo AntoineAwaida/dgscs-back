@@ -15,6 +15,7 @@ var UserSchema = new mongoose.Schema({
 //commentaire de test
 
 UserSchema.pre('save', function(next) {
+    console.log("changement de mot de passe!")
     let user = this;
     //sel
     if (user.password){
