@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 
 const GroupSchema = new mongoose.Schema({
     name:String,
-    members:Array
+    members:Array,
+    workpackages:[{type: mongoose.Schema.Types.ObjectId, ref: 'WorkPackage'}]
 })
 
 
