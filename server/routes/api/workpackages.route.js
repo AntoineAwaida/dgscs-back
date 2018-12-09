@@ -7,6 +7,9 @@ const WorkPackagesController = require('../../../controllers/workpackages/workpa
 
 router.post('/createwp', WorkPackagesController.create);
 router.get('/getwp', WorkPackagesController.getAll);
+router.get('/getwp/:id', WorkPackagesController.getOne);
+
+router.put('/editwp/:id', WorkPackagesController.edit)
 
 router.get('/activate/:id',WorkPackagesController.activate)
 router.get('/deactivate/:id',WorkPackagesController.deactivate)
