@@ -1,5 +1,6 @@
 const GroupModel = require('../../models/group.js')
 const UserModel = require('../../models/user.js')
+const WorkPackageModel = require('../../models/workpackage')
 
 
 exports.create = async function (req, res, err) {
@@ -35,6 +36,25 @@ exports.edit = async function (req,res,err) {
 
 exports.delete = async function (req,res,err){
 
+  WorkPackageModel.find({ groups: req.params.id}, async function (err,wp){
+    wp.forEach(async (workpackage)=> {
+      const new_groups = workpackage.groups.filter((item)=> {
+        return item != req.params.id
+      })
+      workpackage.groups = new_groups;
+
+      await workpackage.save(function(err) {
+        if(err){ 
+          console.log(err)
+          return res.status(500).send(err);
+        }
+      })
+
+    })
+  })
+  
+
+  
   GroupModel.findByIdAndDelete(req.params.id, function(err,data){
     if(err){
       return res.status(500).send(err);
@@ -88,4 +108,6 @@ exports.getAll = async function (req, res, err) {
     return res.status(500).json({ "status": 500, "data": null, "message": "Acces au groupes impossible" })
   }
 
+
 }
+

@@ -5,6 +5,8 @@ var router = express.Router();
 var AuthController = require('../../../controllers/users/auth.controller');
 const UsersController = require('../../../controllers/users/users.controller')
 
+const GroupsController = require('../../../controllers/groups/groups.controller')
+
 var jwt = require('express-jwt');
 
 var auth = jwt({
@@ -26,6 +28,11 @@ router.post('/login', AuthController.login);
 
 router.get('/deactivateuser/:id', UsersController.deactivateUser);
 
-router.get('/activateuser/:id', UsersController.activateUser)
+router.get('/activateuser/:id', UsersController.activateUser);
+
+router.get('/mywp/:id', UsersController.getWPForUser);
+
+
+router.get('/mygroups/:id', UsersController.getGroupsForUser);
 
 module.exports = router;

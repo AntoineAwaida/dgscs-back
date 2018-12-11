@@ -1,5 +1,9 @@
 const UserModel = require('../../models/user.js');
 
+const GroupModel = require('../../models/group')
+
+const WorkPackageModel = require('../../models/workpackage')
+
 
 exports.getUsers = async function(req,res) {
     UserModel.find().select({ 'password': false, '__v': false }).exec((err,users) => {
@@ -57,4 +61,42 @@ exports.activateUser = async function(req,res){
 
     })
 
+}
+
+exports.getGroupsForUser = async function (req, res, err) {
+
+    GroupModel.find({ members: req.params.id}, function (err, groups){
+  
+      if (err) return res.status(500).send(err);
+  
+      return res.status(200).json(groups);
+  
+    })
+  
+}
+  
+
+exports.getWPForUser = async function (req, res, err) {
+
+    GroupModel.find({ members: req.params.id}, async function (err, groups){
+
+        if (err) return res.status(500).send(err);
+
+        let wp = [];
+
+
+        groups.forEach( (group) => {
+        group.workpackages.forEach((workpackage) => wp.push(workpackage));
+        })
+
+        WorkPackageModel.find({'_id': { $in: wp}}, function (err, wp){
+           
+            if (err) return res.status(500).send(err);
+
+            return res.status(200).json(wp);
+
+        })
+
+    })
+  
 }
