@@ -22,6 +22,31 @@ app.set('port', port);
 var server = http.createServer(app);
 
 /**
+ * Listen to socket.io.
+ */
+
+ var io = require('socket.io').listen(server);
+
+ var nsp = io.of('/workpackage')
+ nsp.on('connection', (socket) => {
+
+
+  console.log('Nouvelle connexion à socket.io!');
+
+  socket.on('SEND_MESSAGE',function(data){
+    socket.join(data.room);
+    nsp.to(data.room).emit('RECEIVE_MESSAGE',data.data);
+  })
+
+  socket.on('LEAVE_ROOM', function(data){
+    socket.leave(data.room);
+  })
+
+ })
+
+
+
+/**
  * Listen on provided port, on all network interfaces.
  */
 
