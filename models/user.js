@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 var UserSchema = new mongoose.Schema({
     first_name : String,
     last_name : String,
+    admin : {type : Boolean, default: false },
     email : { type : String, unique : true, required : true },
     password: String,
     status: { type : String, required:true, enum : ['admin','active', 'pending','inactive'], default: 'pending' }
@@ -60,6 +61,7 @@ UserSchema.methods.generateJwt = function() {
       email: this.email,
       first_name: this.first_name,
       last_name: this.last_name,
+      admin: this.admin,
       exp: parseInt(expiry.getTime() / 1000),
     }, "ARIE_SELINGER");
   };
