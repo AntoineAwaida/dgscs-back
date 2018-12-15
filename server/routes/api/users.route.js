@@ -7,6 +7,8 @@ const UsersController = require('../../../controllers/users/users.controller')
 
 const GroupsController = require('../../../controllers/groups/groups.controller')
 
+const ProfilePictureController = require('../../../controllers/users/profilepicture.controller')
+
 var jwt = require('express-jwt');
 
 var auth = jwt({
@@ -34,5 +36,7 @@ router.get('/mywp/:id', UsersController.getWPForUser);
 
 
 router.get('/mygroups/:id', UsersController.getGroupsForUser);
+
+router.post('/setpicture/:id', ProfilePictureController.setPicture);
 
 module.exports = router;
