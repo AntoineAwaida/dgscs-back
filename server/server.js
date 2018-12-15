@@ -33,8 +33,13 @@ var server = http.createServer(app);
 
   console.log('Nouvelle connexion à socket.io!');
 
-  socket.on('SEND_MESSAGE',function(data){
+  socket.on('JOIN_ROOM', function(data){
+
     socket.join(data.room);
+
+  })
+
+  socket.on('SEND_MESSAGE',function(data){
     nsp.to(data.room).emit('RECEIVE_MESSAGE',data.data);
   })
 
