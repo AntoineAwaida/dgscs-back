@@ -61,6 +61,7 @@ UserSchema.methods.generateJwt = function() {
       email: this.email,
       first_name: this.first_name,
       last_name: this.last_name,
+      admin: this.admin,
       exp: parseInt(expiry.getTime() / 1000),
     }, "ARIE_SELINGER");
   };
