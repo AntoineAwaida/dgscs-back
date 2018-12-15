@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 var UserSchema = new mongoose.Schema({
     first_name : String,
     last_name : String,
+    admin : {type : Boolean, default: false },
     email : { type : String, unique : true, required : true },
     password: String,
     status: { type : String, required:true, enum : ['admin','active', 'pending','inactive'], default: 'pending' }
