@@ -1,5 +1,7 @@
 const TaskModel = require('../../models/task');
 const GroupModel = require('../../models/group');
+const workPackageModel = require('../../models/workpackage');
+const UserModel = require('../../models/user');
 
 
 exports.create = async function (req, res, err) {
@@ -28,6 +30,44 @@ exports.create = async function (req, res, err) {
   return res.status(200).json("La tâche a bien été créé!");
 }
 
-exports.getWorkPackageTasks = async function(req, res, err){
-  
+exports.getTasksFromUser = async function(req, res, err){
+
+  try{
+    const userID = req.params.userID;
+    let groups = await GroupModel.find({members : {$in : userID}}).populate('tasks'); // Les groupes du User
+    let tasks = [];
+    //console.log(groups);
+    for(let i=0; i<groups.length; i++){
+      let group = groups[i];
+      for(let j=0; j<group.tasks.length; j++){
+        let task = group.tasks[j];
+        //Avant d'ajouter la tâche on vérifie qu'elle n'est pas dedans
+        let isAlready = false;
+        for(var k=0; k<tasks.length; k++){
+          let task2 = tasks[k];
+          if (task2._id.equals(task._id)){
+            isAlready = true;
+          }
+        }
+        if(!isAlready)
+          tasks.push(task);
+      }
+    }
+
+    //On va maintenant trier le tableau par date de début
+
+    // tasks.sort( (task1, task2) => {
+    //   return(task1.startingDate.compare(task2.startingDate))
+    // });
+
+    console.log(tasks);
+    
+    //console.log("********\n");
+    //console.log(tasks);
+    //console.log("********\n");
+    return res.status(200).send(tasks);
+} catch(e){
+  return res.status(500).json("Impossible de récupérer les tâches du user");
+}
+
 }
