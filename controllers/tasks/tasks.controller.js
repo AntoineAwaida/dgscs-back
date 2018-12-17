@@ -51,7 +51,9 @@ exports.getTasksFromUser = async function (req, res, err) {
           }
         }
         if (!isAlready) {
-          task = await TaskModel.findById(task._id).populate({ path: 'author', select: ['first_name', 'last_name'] });
+          task = await TaskModel.findById(task._id)
+                .populate({ path: 'author', select: ['first_name', 'last_name'] })
+                .populate({ path : 'groups', select:'name' });
           tasks.push(task);
         }
 
@@ -92,7 +94,9 @@ exports.getTaskFromUser = async function (req, res, err) {
         for (let j = 0; j < group.tasks.length; j++) {
           let task = group.tasks[j];
           if (task._id.equals(taskID)) {
-            task = await TaskModel.findById(task._id).populate({ path: 'author', select: ['first_name', 'last_name'] });
+            task = await TaskModel.findById(task._id)
+                .populate({ path: 'author', select: ['first_name', 'last_name'] })
+                .populate({ path : 'groups', select:'name' });
             return res.status(200).send(task);
           }
         }
