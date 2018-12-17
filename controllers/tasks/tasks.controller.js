@@ -108,3 +108,39 @@ exports.getTaskFromUser = async function (req, res, err) {
   }
 
 }
+
+
+exports.editStatus = async function (req, res, err) {
+
+  try {
+    if (!req.body.taskID) {
+      return res.status(500).json("Il manque le paramètre 'taskID'");
+    }
+    else if( (!req.body.status) || ( (req.body.status!='pending') && (req.body.status!='ongoing') && (req.body.status!='done') )) {
+      return res.status(500).json("le paramètre status est manquant ou est différent de 'pending', 'done' et 'ongoing'");
+    }
+    else {
+    
+      const taskID = req.body.taskID;
+      const userID = req.params.userID;
+      const status = req.body.status;
+
+      let groups = await GroupModel.find({ members: { $in: userID } }).populate('tasks'); // Les groupes du User
+      for (let i = 0; i < groups.length; i++) {
+        let group = groups[i];
+        for (let j = 0; j < group.tasks.length; j++) {
+          let task = group.tasks[j];
+          if (task._id.equals(taskID)) {
+            
+            await TaskModel.findByIdAndUpdate(taskID, {status : status});
+            return res.status(200).json("Le user a bien été modifié")
+          }
+        }
+      }
+      return res.status(500).json("Ce user ne peut pas accéder à cette tâche");
+    }
+  } catch (e) {
+    return res.status(500).json("Impossible de récupérer les tâches du user : "+e.message);
+  }
+
+}
