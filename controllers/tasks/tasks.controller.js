@@ -34,13 +34,14 @@ exports.getTasksFromUser = async function(req, res, err){
 
   try{
     const userID = req.params.userID;
-    let groups = await GroupModel.find({members : {$in : userID}}).populate('tasks'); // Les groupes du User
+    let groups = await GroupModel.find({members : {$in : userID}}).populate('tasks').populate('author'); // Les groupes du User
     let tasks = [];
     //console.log(groups);
     for(let i=0; i<groups.length; i++){
       let group = groups[i];
       for(let j=0; j<group.tasks.length; j++){
         let task = group.tasks[j];
+
         //Avant d'ajouter la tâche on vérifie qu'elle n'est pas dedans
         let isAlready = false;
         for(var k=0; k<tasks.length; k++){
@@ -49,8 +50,11 @@ exports.getTasksFromUser = async function(req, res, err){
             isAlready = true;
           }
         }
-        if(!isAlready)
+        if(!isAlready){
+          task = await TaskModel.findById(task._id).populate({path : 'author', select : ['first_name', 'last_name']});
           tasks.push(task);
+        }
+
       }
     }
 
