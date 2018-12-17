@@ -17,14 +17,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({
 storage: storage,
-onFileUploadComplete: function(file) {
-
-    console.log("coucou")
-    console.log(file)
-    encryptor({file:file, password:'test'})
-
-
-}
 });
 
 exports.uploadWPFile = async function (req, res, err) {
