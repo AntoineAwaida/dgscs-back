@@ -70,7 +70,7 @@ exports.delete = async function (req,res,err){
 
 exports.getOne = async function (req, res, err){
 
-  await GroupModel.findById(req.params.id, function(err,group){
+  await GroupModel.findById(req.params.id).populate('members').populate('workpackages').populate('tasks').exec(function(err,group){
     if(err){
       return res.status(500).send(err);
     }
@@ -85,28 +85,14 @@ exports.getOne = async function (req, res, err){
 
 exports.getAll = async function (req, res, err) {
 
-  try {
-
-    let groups = await GroupModel.find();
-
-    for (let i = 0; i < groups.length; i++) {
-
-      let group = groups[i]
-      let users = [];
-      let members = group.members
-      for (let j = 0; j < members.length; j++) {
-        let member = members[j]
-        let user = await UserModel.findById(member).select({ 'password': false, '__v': false })
-        users.push(user)
-      }
-      group.members = users
+  await GroupModel.find().populate('members').populate('workpackages').populate('tasks').exec(function(err,group){
+    if(err){
+      return res.status(500).send(err);
     }
 
-    return res.status(200).json(groups);
+    return res.status(200).json(group);
 
-  } catch (e) {
-    return res.status(500).json({ "status": 500, "data": null, "message": "Acces au groupes impossible" })
-  }
+  })
 
 
 }

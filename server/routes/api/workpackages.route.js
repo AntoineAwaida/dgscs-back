@@ -25,9 +25,10 @@ router.get('/getchat/:id',ChatwpController.getChat)
 
 
 
-router.post('/savefile',FileController.uploadWPFile)
+router.post('/savefile/:id',FileController.uploadWPFile)
+
 /*
-router.get('/getfile/:filename',FileController.getWPFile)
+router.get('/getfiles/:id',FileController.getWPFiles)
 */
 
 module.exports = router;
