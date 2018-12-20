@@ -57,12 +57,12 @@ exports.login = function (req, res) {
 
 
             var token = user.generateJwt();
+            console.log("Bien connecté");
             return res.status(200).json({ "status": 200, "token": token, "message": "Successfully connected" });
 
         }
         else {
             // If user is not found
-            console.log("Bien connecté");
             return res.status(500).json({ "status": 500, "token": null, "message": info });
 
         }
