@@ -1,5 +1,6 @@
 
-import { server } from '../../dgscs/src/app/constants';
+//server = 'http://localhost:3000/'
+server = 'http://cs3.cs-campus.fr:3000/'
 
 
 module.exports = {
