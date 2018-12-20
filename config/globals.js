@@ -1,7 +1,7 @@
 
+import { server } from '../../dgscs/src/app/constants';
 
-const url = 'http://localhost:3000/'
 
 module.exports = {
-    api: url
+    api: server
 }

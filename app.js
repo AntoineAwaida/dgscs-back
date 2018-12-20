@@ -7,6 +7,7 @@ var logger = require('morgan');
 var bluebird = require('bluebird');
 var mongoose = require('mongoose');
 
+
 require('./config/passport');
 
 // Connecting to DDB
@@ -28,7 +29,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var api = require('./server/routes/api.route');
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   next();
