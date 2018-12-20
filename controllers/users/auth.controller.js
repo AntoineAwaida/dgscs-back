@@ -62,8 +62,9 @@ exports.login = function (req, res) {
         }
         else {
             // If user is not found
-            return res.status(500).json({ "status": 500, "token": null, "message": info });
             console.log("Bien connecté");
+            return res.status(500).json({ "status": 500, "token": null, "message": info });
+
         }
     })(req, res);
 };
