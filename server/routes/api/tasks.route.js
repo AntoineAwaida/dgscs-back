@@ -9,6 +9,7 @@ router.get('/gettasks/:userID', TasksController.getTasksFromUser);
 router.post('/gettask/:userID', TasksController.getTaskFromUser);
 
 router.put('/edittaskstatus/:userID', TasksController.editStatus);
+router.put('/edittask/:userID', TasksController.editTask);
 
 
 module.exports = router;
