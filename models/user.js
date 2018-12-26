@@ -1,18 +1,18 @@
 var mongoose = require('mongoose');
-var crypto = require('crypto');
 var jwt = require('jsonwebtoken');
+
 const SALT_WORK_FACTOR = 10;
 const bcrypt = require('bcryptjs');
 
 
-
+// Schéma d'un utilisateur
 var UserSchema = new mongoose.Schema({
-    first_name : String,
-    last_name : String,
+    first_name : String, 
+    last_name : String, 
     admin : {type : Boolean, default: false },
     email : { type : String, unique : true, required : true },
     password: String,
-    status: { type : String, required:true, enum : ['admin','active', 'pending','inactive'], default: 'pending' },
+    status: { type : String, required : true, enum : ['admin','active', 'pending','inactive'], default: 'pending' },
     photoURL: String
 });
 
@@ -65,6 +65,7 @@ UserSchema.methods.generateJwt = function() {
       first_name: this.first_name,
       last_name: this.last_name,
       admin: this.admin,
+      status : this.status,
       exp: parseInt(expiry.getTime() / 1000),
     }, "ARIE_SELINGER");
   };
