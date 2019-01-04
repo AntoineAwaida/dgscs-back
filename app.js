@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.static('static'));
+app.use('/static',express.static('static'));
 
 var api = require('./server/routes/api.route');
 
