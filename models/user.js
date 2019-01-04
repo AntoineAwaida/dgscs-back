@@ -64,6 +64,7 @@ UserSchema.methods.generateJwt = function() {
       first_name: this.first_name,
       last_name: this.last_name,
       status : this.status,
+      photoURL : this.photoURL,
       exp: parseInt(expiry.getTime() / 1000),
     }, "ARIE_SELINGER");
   };
