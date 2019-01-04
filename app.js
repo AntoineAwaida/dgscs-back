@@ -26,7 +26,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/static',express.static('static'));
+//app.use('/static',express.static('static'));
+app.use('/static/assets/img/avatars/', express.static('static/assets/img/avatars'));
 
 var api = require('./server/routes/api.route');
 
