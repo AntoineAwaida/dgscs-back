@@ -29,6 +29,18 @@ exports.getOne = async function (req, res, err) {
 
 }
 
+exports.getLast = async function (req, res, err){
+
+    AnnounceModel.findOne().sort({date: -1}).limit(1).populate('author').exec(function(err,announce){
+
+        if(err) return res.status(500).send(err);
+
+        return res.status(200).json(announce);
+
+    })
+
+}
+
 exports.create = async function (req, res, err) {
 
     let announce = new AnnounceModel(req.body);
