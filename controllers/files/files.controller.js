@@ -33,21 +33,21 @@ exports.uploadTaskFile = async function (req, res, err) {
       // Le fichier vient d'être uploadé
       // Il reste maintenant à créer l'objet File dans la BDD
 
-      // Il faut supprimer le fichier si il n'a pas de nom ou d'auteur
-      if (!req.body.name || !req.body.author) {
+      // Il faut supprimer le fichier si il n'a pas d'auteur
+      if (!req.body.author) {
 
         fs.unlink('./static/assets/files/' + req.file.filename, function (err) {
           if (err) return console.log(err);
           console.log('file deleted successfully');
         });
 
-        return res.status(500).send("Il manque l'attribut 'name' ou 'author' ");
+        return res.status(500).send("Il manque l'attribut 'author' ");
       }
 
       // 2. Création de l'objet File dans la BDD
 
       let file = new FileModel({
-        name : req.body.name,
+        name : req.body.name ? req.body.name : req.file.filename,
         author : req.body.author,
         description : req.body.description ? req.body.description : null,
         fileURL  : req.file.filename,
