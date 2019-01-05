@@ -39,4 +39,6 @@ router.get('/mygroups/:id', UsersController.getGroupsForUser);
 
 router.post('/setpicture/:id', ProfilePictureController.setPicture);
 
+router.put('/modifypassword/:id', UsersController.modifyPassword);
+
 module.exports = router;
