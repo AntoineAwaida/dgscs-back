@@ -60,7 +60,7 @@ exports.delete = async function(req, res, err){
 
 exports.edit = async function (req,res,err) {
 
-    AnnounceModel.findById(req.params.id, function (err,group){
+    AnnounceModel.findById(req.params.id, function (err,announce){
       if (err) return res.status(500).send(err);
   
       announce.title = req.body.title
@@ -68,7 +68,7 @@ exports.edit = async function (req,res,err) {
       announce.author = req.body.author
   
       try{
-        group.save();
+        announce.save();
         return res.status(200).json("L'annonce a bien été modifiée!")
       }
       catch(e){
