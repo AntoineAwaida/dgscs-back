@@ -57,6 +57,10 @@ exports.uploadTaskFile = async function (req, res, err) {
       file.save(function (err, newFile) {
         if(err)
           {
+            fs.unlink('./static/assets/files/' + req.file.filename, function (err2) {
+              if (err2) return console.log(err2);
+              console.log('file deleted successfully');
+            });
             return res.status(500).json({ status : "Impossible d'enregistrer le fichier dans la BDD", error : err.message});
           }
         else {
