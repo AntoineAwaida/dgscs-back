@@ -15,8 +15,8 @@ const AnnounceSchema = new mongoose.Schema({
 
 AnnounceSchema.pre('save', function(){
 
-    let msg = this;
-    msg.date = new Date(msg.date);
+    let announce = this;
+    announce.date = new Date();
 
 })
 
