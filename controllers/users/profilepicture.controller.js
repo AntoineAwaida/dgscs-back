@@ -51,14 +51,14 @@ exports.setPicture = async function (req, res, err) {
 
       avatarUpload(req, res, function(err) {
         if (err) {
-            return res.status(500).send("Erreur au cours de l'envoi de l'image. L'image ne doit pas excéder 512x512 px, et être au format jpeg ou png.");
+            return res.status(500).json("Erreur au cours de l'envoi de l'image. L'image ne doit pas excéder 512x512 px, et être au format jpeg ou png.");
         }
 
         UserModel.findByIdAndUpdate(req.params.id, {photoURL : globals.api + req.file.path}, function(err){
             
             if (err) return res.status(500).send(err);
 
-            return res.status(200).send('Profil bien modifié!');
+            return res.status(200).json("Profil bien modifié!");
         })
       });
 

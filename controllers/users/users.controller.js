@@ -106,3 +106,29 @@ exports.getWPForUser = async function (req, res, err) {
     })
   
 }
+
+exports.modifyPassword = async function (req, res, err) {
+
+    UserModel.findById(req.params.id), async function(err,user){
+
+        if (err) return res.status(500).send(err);
+
+        user.password = req.body.password;
+
+        try {
+
+            user.save();
+
+            return res.status(200).json("ok");
+
+        }
+
+        catch(e) {
+
+            return res.status(500).send(e);
+
+        }
+
+    }
+
+}
