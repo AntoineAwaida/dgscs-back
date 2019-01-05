@@ -47,6 +47,13 @@ var server = http.createServer(app);
     socket.leave(data.room);
   })
 
+  socket.on('CLOSE_CONNECTION', function(){
+
+    socket.disconnect(true)
+
+  })
+
+
  })
 
 
