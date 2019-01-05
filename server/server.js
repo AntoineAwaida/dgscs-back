@@ -27,6 +27,29 @@ var server = http.createServer(app);
 
  var io = require('socket.io').listen(server);
 
+ var nsptask = io.of('/task')
+ nsptask.on('connection', (socket) => {
+
+
+  console.log('Nouvelle connexion à socket.io!');
+
+  socket.on('JOIN_ROOM', function(data){
+
+    socket.join(data.room);
+
+  })
+
+  socket.on('SEND_MESSAGE',function(data){
+    nsp.to(data.room).emit('RECEIVE_MESSAGE',data.data);
+  })
+
+  socket.on('LEAVE_ROOM', function(data){
+    socket.leave(data.room);
+  }) 
+
+
+ })
+
  var nsp = io.of('/workpackage')
  nsp.on('connection', (socket) => {
 
@@ -45,7 +68,7 @@ var server = http.createServer(app);
 
   socket.on('LEAVE_ROOM', function(data){
     socket.leave(data.room);
-  })
+  }) 
 
 
  })
