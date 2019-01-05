@@ -6,7 +6,7 @@ const AnnounceSchema = new mongoose.Schema({
     content:String,
     date: Date,
     author: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    title:string
+    title:String,
 
 
 
