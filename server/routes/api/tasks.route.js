@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var TasksController = require('../../../controllers/tasks/tasks.controller');
+var FileController = require('../../../controllers/files/files.controller');
 
 var ChattaskController = require('../../../controllers/tasks/chattask.controller')
 
@@ -12,6 +13,9 @@ router.post('/gettask/:userID', TasksController.getTaskFromUser);
 
 router.put('/edittaskstatus/:userID', TasksController.editStatus);
 router.put('/edittask/:userID', TasksController.editTask);
+
+router.post('/file', FileController.uploadTaskFile);
+router.get('/file/:fileID', FileController.getFile);
 
 
 router.post('/savechat', ChattaskController.save);
