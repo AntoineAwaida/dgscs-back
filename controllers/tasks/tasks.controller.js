@@ -97,7 +97,7 @@ exports.getTaskFromUser = async function (req, res, err) {
             task = await TaskModel.findById(task._id)
                 .populate({ path: 'author', select: ['first_name', 'last_name'] })
                 .populate({ path : 'groups', select:'name' })
-                .populate({ path : 'files' });
+                .populate({ path : 'files', populate : 'author' });
             return res.status(200).send(task);
           }
         }
