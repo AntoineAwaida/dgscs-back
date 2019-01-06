@@ -24,6 +24,8 @@ const upload = multer({ storage: store }).single('file');
 
 exports.uploadTaskFile = async function (req, res, err) {
 
+  try{
+
   // 1. On upload le fichier
   upload(req, res, function (err) {
     if (err) {
@@ -77,9 +79,14 @@ exports.uploadTaskFile = async function (req, res, err) {
         }
       });
 
-
     }
+    
   })
+
+  }catch(e){
+    return res.status(500).json({ error : e.message });
+  }
+
 }
 
 exports.getFile = async function (req, res, err) {
