@@ -33,6 +33,7 @@ exports.uploadTaskFile = async function (req, res, err) {
     }
     else {
       console.log(req.file);
+      return res.status(200).send(req.file)
       // Le fichier vient d'être uploadé
       // Il reste maintenant à créer l'objet File dans la BDD
 
