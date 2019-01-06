@@ -12,7 +12,10 @@ var UserSchema = new mongoose.Schema({
     email : { type : String, unique : true, required : true },
     password: String,
     status: { type : String, required : true, enum : ['admin','active', 'pending','inactive'], default: 'pending' },
-    photoURL: String
+    photoURL: String,
+    favTasks: [{type: mongoose.Schema.Types.ObjectId, ref: 'Task'}],
+    //favMissions
+    favWorkPackages: [{type: mongoose.Schema.Types.ObjectId, ref: 'WorkPackage'}]
 });
 
 //commentaire de test

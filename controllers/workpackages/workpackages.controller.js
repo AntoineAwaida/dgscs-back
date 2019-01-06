@@ -126,7 +126,7 @@ exports.create = async function (req, res, err) {
 
 exports.getAll = async function (req, res, err) {
 
-  WorkPackageModel.find().populate('groups').exec(function(err,wp){
+  WorkPackageModel.find().populate('groups').populate('tasks').exec(function(err,wp){
 
     if(err) return res.status(500).send(err);
 
@@ -138,7 +138,7 @@ exports.getAll = async function (req, res, err) {
 
 exports.getOne = async function (req, res, err) {
 
-  WorkPackageModel.findById(req.params.id).populate('groups').exec(function(err,wp) {
+  WorkPackageModel.findById(req.params.id).populate('groups').populate('tasks').exec(function(err,wp) {
     
     if (err) return res.status(500).send(err);
 
@@ -179,6 +179,79 @@ exports.readonly = async function (req, res, err) {
     if (err) return res.status(500).send(err);
 
     return res.status(200).json("Le WorkPackage a bien été mis en lecture seule.")
+
+  })
+
+}
+
+exports.getTasks = async function (req, res, err) {
+
+  WorkPackageModel.findById(req.params.id, function (err, wp){
+
+    if (err) return res.status(500).send(err);
+
+    return res.status(200).json(wp.tasks)
+
+  })
+
+}
+
+exports.addTasks = async function (req, res, err) {
+
+
+  WorkPackageModel.findById(req.params.id, function(err, wp) {
+
+  
+
+    if (err) return res.status(500).send(err);
+
+    req.body.tasks.forEach((e) => wp.tasks.push(e))
+
+
+    try {
+
+      wp.save();
+
+      return res.status(200).json("ok");
+
+    }
+
+    catch(e){
+
+      return res.status(500).send(e);
+
+    }
+
+    
+
+  })
+
+}
+
+exports.deleteLinkTask = async function (req, res, err) {
+
+  WorkPackageModel.findById(req.params.id, function(err, wp){
+
+    if (err) return res.status(500).send(err);
+
+    wp.tasks = wp.tasks.filter(function(ele){
+      return ele != req.body.task
+    });
+
+    try {
+
+      wp.save();
+
+      return res.status(200).json("ok")
+
+    }
+
+    catch(e){
+      
+      return res.status(500).send(e)
+
+    }
+    
 
   })
 
