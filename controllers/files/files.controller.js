@@ -80,7 +80,7 @@ exports.uploadTaskFile = async function (req, res, err) {
         const files = task.files
         files.push(file._id);
   
-        TaskModel.findOneAndUpdate(taskID, { files : files }, function(err, newTask){
+        TaskModel.findByIdAndUpdate(taskID, { files : files }, function(err, newTask){
 
           if (err) return console.log(err)
           console.log(newTask);
