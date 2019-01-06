@@ -32,13 +32,15 @@ exports.uploadTaskFile = async function (req, res, err) {
       return res.status(500).send(err);
     }
     else {
-      console.log(req.file);
-      return res.status(200).send(req.file)
+
+
       // Le fichier vient d'être uploadé
       // Il reste maintenant à créer l'objet File dans la BDD
 
       // Il faut supprimer le fichier si il n'a pas d'auteur
       if (!req.body.author) {
+
+        return res.status(500).send("Il manque l'attribut 'author' ");
 
         fs.unlink('./static/assets/files/' + req.file.filename, function (err) {
           if (err) return console.log(err);
