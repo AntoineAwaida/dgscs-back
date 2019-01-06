@@ -27,6 +27,12 @@ router.get('/getchat/:id',ChatwpController.getChat)
 
 router.post('/savefile/:id',FileController.uploadWPFile)
 
+router.put('/addtasks/:id', WorkPackagesController.addTasks)
+
+router.put('/deletelinktask/:id', WorkPackagesController.deleteLinkTask )
+
+router.get('/gettasks/:id', WorkPackagesController.getTasks)
+
 /*
 router.get('/getfiles/:id',FileController.getWPFiles)
 */
