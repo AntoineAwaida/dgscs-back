@@ -26,6 +26,8 @@ exports.uploadTaskFile = async function (req, res, err) {
 
   try{
 
+  console.log(req.params.taskID);
+
   // 1. On upload le fichier
   upload(req, res, function (err) {
     if (err) {
