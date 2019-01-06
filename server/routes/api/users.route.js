@@ -41,4 +41,6 @@ router.post('/setpicture/:id', ProfilePictureController.setPicture);
 
 router.put('/modifypassword/:id', UsersController.modifyPassword);
 
+router.put('/modifywpfav/:id', UsersController.modifyWPFav);
+
 module.exports = router;
