@@ -73,15 +73,25 @@ exports.uploadTaskFile = async function (req, res, err) {
       // 3. On enregistre le fichier dans la tâche
 
       const taskID = req.params.taskID;
-      let task = TaskModel.findById(taskID);
+      TaskModel.findById(taskID, function(err, task){
 
-      const files = task.files
-      files.push(file._id);
+        if (err) return console.log(err)
 
-      newTask = TaskModel.findOneAndUpdate(taskID, { files : files }, true);
-      console.log(newTask);
+        const files = task.files
+        files.push(file._id);
+  
+        TaskModel.findOneAndUpdate(taskID, { files : files }, function(err, newTask){
 
-        return res.status(200).json({ file : file, task : newTask });
+          if (err) return console.log(err)
+          console.log(newTask);
+  
+          return res.status(200).json({ file : file, task : newTask });
+
+        });
+      
+
+      });
+
 
         }
       });
