@@ -9,6 +9,7 @@ const TaskSchema = new mongoose.Schema(
         groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
         startingDate: Date,
         endingDate: Date,
+        files : [{ type: mongoose.Schema.Types.ObjectId, ref: 'File' }],
         status: { type: String, required: true, enum: ['done', 'ongoing', 'pending'], default: 'pending' },
     } 
 );

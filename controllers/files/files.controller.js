@@ -4,8 +4,9 @@ const fs = require('fs');
 
 const globals = require('../../config/globals')
 
-const WorkPackageModel = require('../../models/workpackage')
-const FileModel = require('../../models/file')
+const WorkPackageModel = require('../../models/workpackage');
+const FileModel = require('../../models/file');
+const TaskModel = require('../../models/task');
 
 const store = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -25,8 +26,6 @@ const upload = multer({ storage: store }).single('file');
 exports.uploadTaskFile = async function (req, res, err) {
 
   try{
-
-  console.log(req.params.taskID);
 
   // 1. On upload le fichier
   upload(req, res, function (err) {
@@ -73,11 +72,16 @@ exports.uploadTaskFile = async function (req, res, err) {
 
       // 3. On enregistre le fichier dans la tâche
 
-      // A Faire...
+      const taskID = req.params.taskID;
+      let task = await TaskModel.findById(taskID);
 
-      
+      const files = task.files
+      files.push(file._id);
 
-        return res.status(200).json({ file : file });
+      newTask = await TaskModel.findOneAndUpdate(taskID, { files : files }, true);
+      console.log(newTask);
+
+        return res.status(200).json({ file : file, task : newTask });
 
         }
       });
