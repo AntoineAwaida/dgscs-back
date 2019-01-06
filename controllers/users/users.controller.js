@@ -69,17 +69,7 @@ exports.activateUser = async function(req,res){
 
 }
 
-exports.modifyWPFav = async function(req, ress, err){
 
-    UserService.findByIdAndUpdate(req.params.id, {favWorkPackages: req.body.favwp }, function(err){
-
-        if (err) return res.status(500).send(err);
-
-        return res.status(200).json("Modif des favoris ok!")
-
-    })
-
-}
 
 exports.getGroupsForUser = async function (req, res, err) {
 
@@ -117,6 +107,22 @@ exports.getWPForUser = async function (req, res, err) {
 
     })
   
+
+
+}
+
+
+exports.modifyFav = async function(req, res, err){
+
+
+    UserModel.findByIdAndUpdate(req.params.id, {favWorkPackages: req.body.favwp, favTasks: req.body.favtasks }, function(err){
+
+        if (err) return res.status(500).send(err);
+
+        return res.status(200).json("Modif des favoris ok!")
+
+    })
+
 }
 
 exports.modifyPassword = async function (req, res, err) {
@@ -143,6 +149,18 @@ exports.modifyPassword = async function (req, res, err) {
             return res.status(500).send(e);
 
         }
+
+    })
+
+}
+
+exports.getFavs = async function (req, res, err){
+
+    UserModel.findById(req.params.id, 'favTasks favWorkPackages').populate('favTasks').populate('favWorkPackages').exec(function(err,user){
+
+        if (err) return res.status(500).send(err);
+
+        return res.status(200).json(user);
 
     })
 
