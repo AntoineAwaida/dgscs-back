@@ -112,8 +112,9 @@ exports.uploadTaskFileAsync = async function(req, res, err){
   try{
 
     // 1. On upload le fichier
+    const upload = util.promisify(upload);
     await upload(req, res);
-    
+
     console.log(req.file);
     console.log(req.body);
 
