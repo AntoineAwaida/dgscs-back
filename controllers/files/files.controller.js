@@ -41,6 +41,7 @@ const uploadFile = async function(req, res, err){
 
     let file = new FileModel({
       name : req.body.name ? req.body.name : req.file.originalname,
+      originalname : req.file.originalname,
       author : req.body.author,
       description : req.body.description ? req.body.description : null,
       fileURL  : req.file.filename,
