@@ -113,6 +113,9 @@ exports.uploadTaskFileAsync = async function(req, res, err){
 
     // 1. On upload le fichier
     await upload(req, res);
+    
+    console.log(req.file);
+    console.log(req.body);
 
     // 2. On vérifie qu'il y a bien un auteur
     if (!req.body.author) {
