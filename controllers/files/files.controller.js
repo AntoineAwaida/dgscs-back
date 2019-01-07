@@ -89,7 +89,7 @@ exports.uploadWorkPackageFile = async function(req, res, err) {
 
     // 4. On enregistre le fichier dans le WP
 
-    await WorkPackageModel.findOneAndUpdate({_id: req.params.taskID}, {$push: {files: file._id}});
+    await WorkPackageModel.findOneAndUpdate({_id: req.params.workpackageID}, {$push: {files: file._id}});
     return res.status(200).json({ file : file });
   } 
   catch(e){
