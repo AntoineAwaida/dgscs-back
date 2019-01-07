@@ -23,6 +23,8 @@ const store = multer.diskStorage({
 
 const upload = multer({ storage: store }).single('file');
 
+
+
 exports.uploadTaskFile = async function (req, res, err) {
 
   try{
@@ -105,6 +107,51 @@ exports.uploadTaskFile = async function (req, res, err) {
 
 }
 
+
+exports.uploadTaskFileAsync = async function(req, res, err){
+  try{
+
+    // 1. On upload le fichier
+    await upload(req, res);
+
+    // 2. On vérifie qu'il y a bien un auteur
+    if (!req.body.author) {
+      throw new Error("Il manque l'attribut 'author'");
+    }
+
+    // 3. Création de l'objet File dans la BDD
+
+    let file = new FileModel({
+      name : req.body.name ? req.body.name : req.file.filename,
+      author : req.body.author,
+      description : req.body.description ? req.body.description : null,
+      fileURL  : req.file.filename,
+      date : new Date()
+    });
+
+    await file.save()
+
+    // 4. On enregistre le fichier dans la tâche
+
+    const newTask = await TaskModel.findOneAndUpdate({_id: req.params.taskID}, {$push: {files: file._id}}, { new: true });
+    return res.status(200).json({ file : file, task : newTask });
+
+
+  }
+  catch(e){
+
+    // S'il y a un problème, on supprime le fichier de la BDD
+
+    fs.unlink('./static/assets/files/' + req.file.filename, function (err) {
+      if (err) return console.log(err);
+      console.log('File deleted successfully');
+    });
+
+    return res.status(500).json({ error : e.message });
+  }
+}
+
+
 exports.getFile = async function (req, res, err) {
   const fileID = req.params.fileID;
 
@@ -149,3 +196,4 @@ exports.uploadWPFile = async function (req, res, err) {
 
 
 }
+
