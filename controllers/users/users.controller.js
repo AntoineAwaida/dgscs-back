@@ -45,6 +45,16 @@ exports.getUser = async function(req,res){
     })
 }
 
+exports.getFiles = async function(req, res){
+    try{
+        const user = await UserModel.findById(req.params.userID, { select : "files" })
+                    .populate({path : "files", populate : { path : "author", select : ["first_name", "last_name"]}});
+        return res.status(200).send(user.files);
+    }catch(e){
+        return res.status(500).json({message : e.message});
+    }
+}
+
 exports.deactivateUser = async function(req,res){
 
     UserModel.findByIdAndUpdate(req.params.id, {status: 'inactive'}, function(err){

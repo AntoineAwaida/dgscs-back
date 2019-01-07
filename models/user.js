@@ -13,6 +13,7 @@ var UserSchema = new mongoose.Schema({
     password: String,
     status: { type : String, required : true, enum : ['admin','active', 'pending','inactive'], default: 'pending' },
     photoURL: String,
+    files : [{type: mongoose.Schema.Types.ObjectId, ref: 'File'}],
     favTasks: [{type: mongoose.Schema.Types.ObjectId, ref: 'Task'}],
     //favMissions
     favWorkPackages: [{type: mongoose.Schema.Types.ObjectId, ref: 'WorkPackage'}]
