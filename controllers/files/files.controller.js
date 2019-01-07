@@ -72,7 +72,17 @@ exports.uploadTaskFileAsync = async function(req, res, err){
 
 
 exports.uploadTaskFile = async function(req, res, err) {
-  return await uploadFile(req, res, err);
+  try{
+    file = await uploadFile(req, res, err);
+
+    // 4. On enregistre le fichier dans la tâche
+
+    const newTask = await TaskModel.findOneAndUpdate({_id: req.params.taskID}, {$push: {files: file._id}}, { new: true });
+    return res.status(200).json({ file : file, task : newTask });
+  } 
+  catch(e){
+    return res.status(500).json({ error : e.message });
+  }
 }
 
 const uploadFile = async function(req, res, err){
@@ -99,11 +109,7 @@ const uploadFile = async function(req, res, err){
 
     await file.save()
 
-    // 4. On enregistre le fichier dans la tâche
-
-    const newTask = await TaskModel.findOneAndUpdate({_id: req.params.taskID}, {$push: {files: file._id}}, { new: true });
-    return res.status(200).json({ file : file, task : newTask });
-
+    return file 
 
   }
   catch(e){
@@ -116,7 +122,8 @@ const uploadFile = async function(req, res, err){
       console.log('File deleted successfully');
     });
 
-    return res.status(500).json({ error : e.message });
+    throw e
+
   }
 }
 
