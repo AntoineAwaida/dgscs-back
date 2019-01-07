@@ -40,7 +40,7 @@ const uploadFile = async function(req, res, err){
     // 3. Création de l'objet File dans la BDD
 
     let file = new FileModel({
-      name : req.body.name ? req.body.name : req.file.filename,
+      name : req.body.name ? req.body.name : req.file.originalname,
       author : req.body.author,
       description : req.body.description ? req.body.description : null,
       fileURL  : req.file.filename,
