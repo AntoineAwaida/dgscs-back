@@ -144,6 +144,7 @@ exports.uploadTaskFileAsync = async function(req, res, err){
   }
   catch(e){
 
+    console.log(e.message);
     // S'il y a un problème, on supprime le fichier de la BDD
 
     fs.unlink('./static/assets/files/' + req.file.filename, function (err) {
