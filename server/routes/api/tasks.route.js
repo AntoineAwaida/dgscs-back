@@ -16,8 +16,6 @@ router.put('/edittask/:userID', TasksController.editTask);
 
 router.post('/file/:taskID', FileController.uploadTaskFile);
 
-router.get('/file/:fileID', FileController.getFile);
-
 
 router.post('/savechat', ChattaskController.save);
 router.get('/getchat/:id',ChattaskController.getChat)
