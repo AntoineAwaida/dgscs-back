@@ -47,8 +47,9 @@ const uploadFile = async function(req, res, err){
     });
 
     await file.save()
+    file = await FileModel.findById(file._id).populate({path : author, select : ["first_name", "last_name"]});
 
-    return file 
+    return file
 
   }
   catch(e){
