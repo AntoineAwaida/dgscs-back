@@ -109,7 +109,8 @@ exports.getFile = async function (req, res, err) {
 
   try {
     const file = await FileModel.findById(fileID);
-    res.status(200).sendFile(file.fileURL, {root: './static/assets/files/', header : { "Content-Disposition" : "filename = 'some_file.pdf'"}});
+    res.setHeader('Content-Disposition', 'attachment; filename=' + 'salut');
+    res.status(200).sendFile(file.fileURL, {root: './static/assets/files/'});
   }
   catch(e) {
     return res.status(500).json({error : e});
