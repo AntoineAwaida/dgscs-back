@@ -8,6 +8,7 @@ const globals = require('../../config/globals')
 const WorkPackageModel = require('../../models/workpackage');
 const FileModel = require('../../models/file');
 const TaskModel = require('../../models/task');
+const UserModel = require('../../models/user');
 
 const store = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -48,6 +49,10 @@ const uploadFile = async function(req, res, err){
 
     await file.save()
     file = await FileModel.findById(file._id).populate({path : "author", select : ["first_name", "last_name"]});
+
+    // 4. On va ajouter ce file dans la liste des files du user;
+
+    await UserModel.findOneAndUpdate({_id: req.body.author}, {$push: {files: file._id}});
 
     return file
 
