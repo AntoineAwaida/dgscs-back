@@ -7,7 +7,7 @@ const WorkPackageSchema = new mongoose.Schema({
     tasks:[{type:mongoose.Schema.Types.ObjectId, ref: 'Task'}],
     status:{type: String, default:'active', required:true, enum:['active','inactive','readonly']},
     groups:[{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}],
-    files:[String]
+    files : { type : [{ type: mongoose.Schema.Types.ObjectId, ref: 'File' }], default : []}
 
    
 
