@@ -109,7 +109,7 @@ exports.getFile = async function (req, res, err) {
 
   try {
     const file = await FileModel.findById(fileID);
-    res.setHeader( "Content-Disposition", "filename=" + file.filename );
+    res.setHeader("filename = " + file.filename );
     res.status(200).sendFile(file.fileURL, {root: './static/assets/files/'});
   }
   catch(e) {
