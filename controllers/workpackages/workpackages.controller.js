@@ -138,7 +138,7 @@ exports.getAll = async function (req, res, err) {
 
 exports.getOne = async function (req, res, err) {
 
-  WorkPackageModel.findById(req.params.id).populate('groups').populate('tasks').exec(function(err,wp) {
+  WorkPackageModel.findById(req.params.id).populate('groups').populate('tasks').populate({path : 'files', populate : { path : 'author', select : ['first_name', 'last_name']}}).exec(function(err,wp) {
     
     if (err) return res.status(500).send(err);
 
