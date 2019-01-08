@@ -25,7 +25,7 @@ exports.getUsers = async function (req, res) {
 
         // 2. On renvoie tous les users
 
-        const users = await UserModel.find().select(["first_name", "last_name", "email", "status", "photoURL"]);
+        const users = await UserModel.find().select(["first_name", "last_name", "email", "status"]);
         return res.status(200).send(users);
 
     } catch (e) {
