@@ -1,22 +1,11 @@
 var express = require('express');
-
 var router = express.Router();
+const auth = require('../auth-payload');
 
-var AuthController = require('../../../controllers/users/auth.controller');
-const UsersController = require('../../../controllers/users/users.controller')
-
-const GroupsController = require('../../../controllers/groups/groups.controller')
-
-const ProfilePictureController = require('../../../controllers/users/profilepicture.controller')
-
-var jwt = require('express-jwt');
-
-var auth = jwt({
-  secret: 'ARIE_SELINGER',
-  userProperty: 'payload'
-});
-
-
+const AuthController = require('../../../controllers/users/auth.controller');
+const UsersController = require('../../../controllers/users/users.controller');
+const ProfilePictureController = require('../../../controllers/users/profilepicture.controller');
+ 
 router.get('/getusers', auth, UsersController.getUsers);
 
 router.get('/getactiveusers', auth, UsersController.getActiveUsers);
@@ -44,5 +33,9 @@ router.put('/modifypassword/:id', UsersController.modifyPassword);
 router.put('/modifyfav/:id', UsersController.modifyFav);
 
 router.get('/getfavs/:id', UsersController.getFavs);
+
+
+// Routes avec permissions
+
 
 module.exports = router;

@@ -4,13 +4,15 @@ var jwt = require('jsonwebtoken');
 const SALT_WORK_FACTOR = 10;
 const bcrypt = require('bcryptjs');
 
+const token_password = require('../config/globals').token_password;
+
 
 // Schéma d'un utilisateur
 var UserSchema = new mongoose.Schema({
     first_name : String, 
     last_name : String, 
     email : { type : String, unique : true, required : true },
-    password: String,
+    password: { type : String, select : false, required : true },
     status: { type : String, required : true, enum : ['admin','active', 'pending','inactive'], default: 'pending' },
     photoURL: String,
     files : [{type: mongoose.Schema.Types.ObjectId, ref: 'File'}],
@@ -60,7 +62,7 @@ UserSchema.methods.validPassword = function(password){
 
 UserSchema.methods.generateJwt = function() {
     var expiry = new Date();
-    expiry.setDate(expiry.getDate() + 30); //nombre de jours
+    expiry.setDate(expiry.getDate() + 30); //nombre de jours = 30j
 
     return jwt.sign({
       _id: this._id,
@@ -70,7 +72,7 @@ UserSchema.methods.generateJwt = function() {
       status : this.status,
       photoURL : this.photoURL,
       exp: parseInt(expiry.getTime() / 1000),
-    }, "ARIE_SELINGER");
+    }, token_password);
   };
 
 // Create the model
