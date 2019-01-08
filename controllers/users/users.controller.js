@@ -292,6 +292,7 @@ const isAdmin = async function (userID) {
 
 const tokenID = function (req) {
     if (req.payload) {
+        console.log(req.payload._id);
         return req.payload._id;
     }
     else {
