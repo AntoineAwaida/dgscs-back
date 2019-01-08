@@ -220,7 +220,7 @@ const tokenID = function (req) {
 const mustBeAdmin = async function (userID) {
     try {
         if (!(await isAdmin(userID))) {
-            throw new Error("mustBeAdmin error -> the user is not admin");
+            throw new Error("the user is not admin");
         }
     } catch (e) {
         throw new Error("mustBeAdmin error -> " + e.message);
