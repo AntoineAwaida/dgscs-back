@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-//app.use('/static',express.static('static'));
+// On peut accéder aux avatars de manière statique
 app.use('/static/assets/img/avatars/', express.static('static/assets/img/avatars'));
 
 var api = require('./server/routes/api.route');
