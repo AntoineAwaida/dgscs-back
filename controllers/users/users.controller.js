@@ -243,6 +243,7 @@ exports.getMyGroups = async function (req, res) {
         // 1. On vérifie qu'il est bien 'actif' ou 'admin'
         try {
             const id = tokenID(req);
+            console.log(id);
             const status = await getStatus(id);
             if (!((status == "active") || (status == "admin"))) {
                 throw new Error("the user is not 'active' or 'admin'");
