@@ -240,7 +240,7 @@ exports.getPendingUsers = async function (req, res) {
 exports.getMyGroups = async function (req, res) {
     try {
         const id = tokenID(req);
-        
+
         // 1. On vérifie qu'il est bien 'actif' ou 'admin'
         try {
             const status = await getStatus(id);
@@ -251,11 +251,11 @@ exports.getMyGroups = async function (req, res) {
             return res.status(401).send({ error: e.message })
         }
 
-        console.log(id);
 
         // 2. On renvoie tous les groupes du user
 
         const groups = await getGroups(id);
+        console.log(groups);
         return groups;
 
     } catch (e) {
@@ -294,7 +294,6 @@ const isAdmin = async function (userID) {
 
 const tokenID = function (req) {
     if (req.payload) {
-        console.log(req.payload._id);
         return req.payload._id;
     }
     else {
