@@ -28,7 +28,7 @@ router.put('/modifyfav/:id', UsersController.modifyFav);
 
 router.get('/getfavs/:id', UsersController.getFavs);
 
-//router.get('/mygroups/:userID', UsersController.getGroupsForUser);
+router.get('/mygroups/:userID', UsersController.getGroupsForUser);
 
 // Routes avec permissions
 
@@ -43,8 +43,8 @@ router.get('/getusers', auth, UsersController.getUsers); // ok
 router.get('/getactiveusers', auth, UsersController.getActiveUsers); // ok
 router.get('/getpendingusers', auth, UsersController.getPendingUsers); // ok
 
-// Endpoints pour récupérer ses infos
+// Endpoints pour récupérer ses propres infos
 
-router.get('/mygroups/:userID', UsersController.getMyGroups);
+router.get('/mygroups', UsersController.getMyGroups); 
 
 module.exports = router;
