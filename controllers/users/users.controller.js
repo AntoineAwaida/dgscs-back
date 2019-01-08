@@ -239,10 +239,10 @@ exports.getPendingUsers = async function (req, res) {
 
 exports.getMyGroups = async function (req, res) {
     try {
-
+        const id = tokenID(req);
+        
         // 1. On vérifie qu'il est bien 'actif' ou 'admin'
         try {
-            const id = tokenID(req);
             const status = await getStatus(id);
             if (!((status == "active") || (status == "admin"))) {
                 throw new Error("the user is not 'active' or 'admin'");
