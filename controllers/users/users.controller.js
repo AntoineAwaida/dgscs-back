@@ -29,8 +29,8 @@ exports.getUsers = async function (req, res) {
         return res.status(200).send(users);
 
     } catch (e) {
-    return res.status(500).send({ error: e.message })
-}
+        return res.status(500).send({ error: e.message })
+    }
 }
 
 exports.getActiveUsers = async function (req, res) {
@@ -191,7 +191,7 @@ exports.getFavs = async function (req, res, err) {
 
 // Fonctions diverses
 
-const getStatus = async function(userID) {
+const getStatus = async function (userID) {
     try {
         return (await UserModel.findById(userID).select(["status"])).status;
     } catch (e) {
@@ -199,7 +199,7 @@ const getStatus = async function(userID) {
     }
 }
 
-const isAdmin = async function(userID) {
+const isAdmin = async function (userID) {
     try {
         const status = await getStatus(userID);
         return (status == "admin")
@@ -218,7 +218,11 @@ const tokenID = function (req) {
 }
 
 const mustBeAdmin = async function (userID) {
-    if (!(await isAdmin(tokenID))) {
-        throw new Error("mustBeAdmin error -> the user is not admin");
+    try {
+        if (!(await isAdmin(uderID))) {
+            throw new Error("mustBeAdmin error -> the user is not admin");
+        }
+    } catch (e) {
+        throw new Error("mustBeAdmin error -> " + e.message);
     }
 } 
