@@ -21,16 +21,17 @@ exports.getActiveUsersPrevious = async function (req, res) {
     });
 }
 
-
-// Fonctions en cours de traitement 
-
-exports.getPendingUsers = async function (req, res) {
+exports.getPendingUsersPrevious = async function (req, res) {
     UserModel.find({ status: 'pending' }).select({ 'password': false, '__v': false }).exec((err, users) => {
         if (err) return res.status(500).send(err);
 
         res.json(users);
     });
 }
+
+
+// Fonctions en cours de traitement 
+
 
 exports.getUser = async function (req, res) {
     UserModel.findById(req.params.id, function (err, user) {
@@ -208,6 +209,27 @@ exports.getActiveUsers = async function (req, res) {
         // 2. On renvoie tous les users actifs ("admin" + "active")
 
         const users = await UserModel.find({ $or: [{ status: 'admin' }, { status: 'active' }] }).select(["first_name", "last_name", "email"]);
+        return res.status(200).send(users);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+}
+
+exports.getPendingUsers = async function (req, res) {
+    try {
+
+        // 1. On vérifie qu'il est bien admin
+        try {
+            const id = tokenID(req);
+            await mustBeAdmin(id);
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On renvoie tous les users en attente (pending)
+
+        const users = await UserModel.find({ status: 'pending' }).select(["first_name", "last_name", "email"]);
         return res.status(200).send(users);
 
     } catch (e) {
