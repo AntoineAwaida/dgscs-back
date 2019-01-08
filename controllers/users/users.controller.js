@@ -17,8 +17,8 @@ exports.getUsers = async function (req, res) {
 
         // 1. On vérifie qu'il est bien admin
         try {
-            const tokenID = this.tokenID(req);
-            await mustBeAdmin(tokenID);
+            const id = tokenID(req);
+            await mustBeAdmin(id);
         } catch (e) {
             return res.status(401).send({ error: e.message })
         }
