@@ -4,7 +4,7 @@ const WorkPackageModel = require('../../models/workpackage')
 
 
 
-exports.getUsers = async function (req, res) {
+exports.getUsers2 = async function (req, res) {
     UserModel.find().select({ 'password': false, '__v': false }).exec((err, users) => {
         if (err) return res.status(500).send(err);
 
@@ -12,7 +12,7 @@ exports.getUsers = async function (req, res) {
     });
 }
 
-exports.getUsers2 = async function (req, res) {
+exports.getUsers = async function (req, res) {
     try {
 
         // 1. On vérifie qu'il est bien admin
