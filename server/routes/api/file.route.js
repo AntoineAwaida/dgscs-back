@@ -6,7 +6,7 @@ var FileController = require('../../../controllers/files/files.controller');
 var UserController = require('../../../controllers/users/users.controller');
 
 
-router.get('/:fileID', FileController.getFile);
+router.get('/:fileURL', FileController.getFile);
 router.get('/user/:userID', auth,  UserController.getFiles);
 
 module.exports = router;
