@@ -243,7 +243,6 @@ exports.getMyGroups = async function (req, res) {
         // 1. On vérifie qu'il est bien 'actif' ou 'admin'
         try {
             const id = tokenID(req);
-            console.log(id);
             const status = await getStatus(id);
             if (!((status == "active") || (status == "admin"))) {
                 throw new Error("the user is not 'active' or 'admin'");
@@ -251,6 +250,8 @@ exports.getMyGroups = async function (req, res) {
         } catch (e) {
             return res.status(401).send({ error: e.message })
         }
+
+        console.log(id);
 
         // 2. On renvoie tous les groupes du user
 
