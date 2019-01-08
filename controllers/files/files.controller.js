@@ -108,8 +108,6 @@ exports.uploadWorkPackageFile = async function(req, res, err) {
 exports.getFile = async function (req, res, err) {
   const fileID = req.params.fileID;
 
-  console.log(req.payload);
-
   try {
     const file = await FileModel.findById(fileID);
     //res.header('Content-Disposition', 'attachment; filename=' + file.name);

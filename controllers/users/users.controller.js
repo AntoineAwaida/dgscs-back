@@ -46,6 +46,7 @@ exports.getUser = async function(req,res){
 }
 
 exports.getFiles = async function(req, res){
+    console.log(req.payload);
     try{
         const user = await UserModel.findById(req.params.userID, { select : "files" })
                     .populate({path : "files", populate : { path : "author", select : ["first_name", "last_name"]}});
