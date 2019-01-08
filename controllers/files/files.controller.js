@@ -107,7 +107,7 @@ exports.uploadWorkPackageFile = async function(req, res, err) {
 
 exports.getFile = async function (req, res, err) {
   const fileURL = decodeURIComponent(req.params.fileURL);
-
+  console.log(fileURL);
   try {
     const file = await FileModel.find({ fileURL : fileURL });
     console.log(file);
