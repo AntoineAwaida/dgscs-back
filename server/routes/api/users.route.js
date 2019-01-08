@@ -45,6 +45,6 @@ router.get('/getpendingusers', auth, UsersController.getPendingUsers); // ok
 
 // Endpoints pour récupérer ses propres infos
 
-router.get('/mygroups', UsersController.getMyGroups); 
+router.get('/mygroups', auth, UsersController.getMyGroups); 
 
 module.exports = router;
