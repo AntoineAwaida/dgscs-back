@@ -237,6 +237,30 @@ exports.getPendingUsers = async function (req, res) {
     }
 }
 
+exports.getMyGroups = async function (req, res) {
+    try {
+
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+        try {
+            const id = tokenID(req);
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On renvoie tous les groupes du user
+
+        const groups = await getGroups(id);
+        return groups;
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+}
+
 
 // Fonctions diverses
 
@@ -246,6 +270,15 @@ const getStatus = async function (userID) {
     } catch (e) {
         throw new Error("getStatus error -> " + e.message);
     }
+}
+
+const getGroups = async function (userID) {
+    try {
+        const groups = await GroupModel.find({ members: userID }).select(["name"]);
+        return groups;
+    } catch (e) {
+        throw new Error("getGroup error -> " + e.message);
+    }  
 }
 
 const isAdmin = async function (userID) {

@@ -7,18 +7,13 @@ const UsersController = require('../../../controllers/users/users.controller');
 const ProfilePictureController = require('../../../controllers/users/profilepicture.controller');
  
 
-router.get('/getactiveusers', auth, UsersController.getActiveUsers);
-router.get('/getpendingusers', auth, UsersController.getPendingUsers);
-
 router.get('/getuser/:id', UsersController.getUser)
 
-
-router.post('/register', AuthController.register);
-router.post('/login', AuthController.login);
 
 router.get('/deactivateuser/:id', UsersController.deactivateUser);
 
 router.get('/activateuser/:id', UsersController.activateUser);
+
 
 router.get('/mywp/:id', UsersController.getWPForUser);
 
@@ -33,9 +28,23 @@ router.put('/modifyfav/:id', UsersController.modifyFav);
 
 router.get('/getfavs/:id', UsersController.getFavs);
 
+//router.get('/mygroups/:userID', UsersController.getGroupsForUser);
 
 // Routes avec permissions
 
-router.get('/getusers', auth, UsersController.getUsers);
+// Endpoints pour s'inscrire et se connecter
+
+router.post('/register', AuthController.register);
+router.post('/login', AuthController.login);
+
+// Endpoints pour récupérer les users en tout genre (admin)
+
+router.get('/getusers', auth, UsersController.getUsers); // ok
+router.get('/getactiveusers', auth, UsersController.getActiveUsers); // ok
+router.get('/getpendingusers', auth, UsersController.getPendingUsers); // ok
+
+// Endpoints pour récupérer ses infos
+
+router.get('/mygroups/:userID', UsersController.getMyGroups);
 
 module.exports = router;
