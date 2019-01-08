@@ -8,14 +8,8 @@ var tasks = require('./api/tasks.route');
 var announces = require('./api/announces.route');
 var files = require('./api/file.route');
 
-var jwt = require('express-jwt');
 
-var auth = jwt({
-  secret: 'ARIE_SELINGER',
-  userProperty: 'payload'
-});
-
-router.use('/users', auth, users);
+router.use('/users', users);
 router.use('/groups',groups);
 router.use('/workpackages',workpackages);
 router.use('/tasks', tasks);
