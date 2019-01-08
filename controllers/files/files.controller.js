@@ -106,10 +106,10 @@ exports.uploadWorkPackageFile = async function(req, res, err) {
 
 
 exports.getFile = async function (req, res, err) {
-  const fileURL = req.params.fileURL;
+  const fileURL = decodeURIComponent(req.params.fileURL);
 
   try {
-    const file = await FileModel.find({ fileURL : decodeURIComponent(fileURL) });
+    const file = await FileModel.find({ fileURL : fileURL });
     //res.header('Content-Disposition', 'attachment; filename=' + file.name);
     res.status(200).sendFile(file.fileURL, {root: './static/assets/files/'});
   }
