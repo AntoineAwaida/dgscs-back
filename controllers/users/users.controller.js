@@ -3,8 +3,9 @@ const GroupModel = require('../../models/group')
 const WorkPackageModel = require('../../models/workpackage')
 
 
+// Fonctions anciennes
 
-exports.getUsers2 = async function (req, res) {
+exports.getUsersPrevious = async function (req, res) {
     UserModel.find().select({ 'password': false, '__v': false }).exec((err, users) => {
         if (err) return res.status(500).send(err);
 
@@ -12,34 +13,16 @@ exports.getUsers2 = async function (req, res) {
     });
 }
 
-exports.getUsers = async function (req, res) {
-    try {
-
-        // 1. On vérifie qu'il est bien admin
-        try {
-            const id = tokenID(req);
-            await mustBeAdmin(id);
-        } catch (e) {
-            return res.status(401).send({ error: e.message })
-        }
-
-        // 2. On renvoie tous les users
-
-        const users = await UserModel.find().select(["first_name", "last_name", "email", "status"]);
-        return res.status(200).send(users);
-
-    } catch (e) {
-        return res.status(500).send({ error: e.message })
-    }
-}
-
-exports.getActiveUsers = async function (req, res) {
+exports.getActiveUsersPrevious = async function (req, res) {
     UserModel.find({ $or: [{ status: 'admin' }, { status: 'active' }] }).select({ 'password': false, '__v': false }).exec((err, users) => {
         if (err) return res.status(500).send(err);
 
         res.json(users);
     });
 }
+
+
+// Fonctions en cours de traitement 
 
 exports.getPendingUsers = async function (req, res) {
     UserModel.find({ status: 'pending' }).select({ 'password': false, '__v': false }).exec((err, users) => {
@@ -186,6 +169,50 @@ exports.getFavs = async function (req, res, err) {
 
     })
 
+}
+
+// Fonctions avec permissions
+
+exports.getUsers = async function (req, res) {
+    try {
+
+        // 1. On vérifie qu'il est bien admin
+        try {
+            const id = tokenID(req);
+            await mustBeAdmin(id);
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On renvoie tous les users
+
+        const users = await UserModel.find().select(["first_name", "last_name", "email", "status"]);
+        return res.status(200).send(users);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+}
+
+exports.getActiveUsers = async function (req, res) {
+    try {
+
+        // 1. On vérifie qu'il est bien admin
+        try {
+            const id = tokenID(req);
+            await mustBeAdmin(id);
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On renvoie tous les users actifs ("admin" + "active")
+
+        const users = await UserModel.find({ $or: [{ status: 'admin' }, { status: 'active' }] }).select(["first_name", "last_name", "email"]);
+        return res.status(200).send(users);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
 }
 
 

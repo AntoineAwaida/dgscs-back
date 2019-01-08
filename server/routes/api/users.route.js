@@ -6,7 +6,6 @@ const AuthController = require('../../../controllers/users/auth.controller');
 const UsersController = require('../../../controllers/users/users.controller');
 const ProfilePictureController = require('../../../controllers/users/profilepicture.controller');
  
-router.get('/getusers', auth, UsersController.getUsers);
 
 router.get('/getactiveusers', auth, UsersController.getActiveUsers);
 router.get('/getpendingusers', auth, UsersController.getPendingUsers);
@@ -37,5 +36,6 @@ router.get('/getfavs/:id', UsersController.getFavs);
 
 // Routes avec permissions
 
+router.get('/getusers', auth, UsersController.getUsers);
 
 module.exports = router;
