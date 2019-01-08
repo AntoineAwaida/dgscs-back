@@ -255,8 +255,7 @@ exports.getMyGroups = async function (req, res) {
         // 2. On renvoie tous les groupes du user
 
         const groups = await getGroups(id);
-        console.log(groups);
-        return groups;
+        return res.status(200).send(groups);
 
     } catch (e) {
         return res.status(500).send({ error: e.message })
