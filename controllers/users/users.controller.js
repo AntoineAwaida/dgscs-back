@@ -46,7 +46,9 @@ exports.getUser = async function(req,res){
 }
 
 exports.getFiles = async function(req, res){
-    console.log(req.payload);
+    if (!req.payload._id) {
+        return res.status(401).json({ "status": 401,  "message" : "UnauthorizedError: private profile"})
+    }
     try{
         const user = await UserModel.findById(req.params.userID, { select : "files" })
                     .populate({path : "files", populate : { path : "author", select : ["first_name", "last_name"]}});
