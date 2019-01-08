@@ -114,7 +114,7 @@ exports.getFile = async function (req, res, err) {
     res.status(200).sendFile(file.fileURL, {root: './static/assets/files/'});
   }
   catch(e) {
-    return res.status(500).json({error : e});
+    return res.status(500).json({error : e.message});
   }
 }
 
