@@ -1,8 +1,7 @@
-const jwt = require('express-jwt');
-const secret = require('../../config/globals').token_password;
+var jwt = require('express-jwt');
 
-const auth = jwt({
-  secret: secret,
+var auth = jwt({
+  secret: 'ARIE_SELINGER',
   userProperty: 'payload'
 });
 

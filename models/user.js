@@ -4,8 +4,7 @@ var jwt = require('jsonwebtoken');
 const SALT_WORK_FACTOR = 10;
 const bcrypt = require('bcryptjs');
 
-const token_password = require('../config/globals').token_password;
-
+const secret = require('../config/globals').secret;
 
 // Schéma d'un utilisateur
 var UserSchema = new mongoose.Schema({
@@ -44,9 +43,7 @@ UserSchema.pre('save', function(next) {
     }
 
     else {
-
         next();
-
     }
 
     
@@ -55,10 +52,9 @@ UserSchema.pre('save', function(next) {
 
 
 UserSchema.methods.validPassword = function(password){
-
     return bcrypt.compareSync(password, this.password);
-
 }
+
 
 UserSchema.methods.generateJwt = function() {
     var expiry = new Date();
@@ -72,11 +68,10 @@ UserSchema.methods.generateJwt = function() {
       status : this.status,
       photoURL : this.photoURL,
       exp: parseInt(expiry.getTime() / 1000),
-    }, 'ARIE_SELINGER');
+    }, secret);
   };
 
 // Create the model
-
 
 const UserModel = mongoose.model('User', UserSchema);
 
