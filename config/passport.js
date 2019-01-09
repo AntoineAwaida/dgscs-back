@@ -7,7 +7,7 @@ passport.use(new LocalStrategy({
 },
   function (username, password, done) {
     UserModel.findOne(
-      { email: username }, ["password"],
+      { email: username }, { password : true },
       function (err, user) {
 
         if (err) {
