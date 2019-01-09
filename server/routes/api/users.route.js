@@ -28,8 +28,6 @@ router.put('/modifyfav/:id', UsersController.modifyFav);
 
 router.get('/getfavs/:id', UsersController.getFavs);
 
-router.get('/mygroups/:userID', UsersController.getGroupsForUser);
-
 // Routes avec permissions
 
 // Endpoints pour s'inscrire et se connecter
