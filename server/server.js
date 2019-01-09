@@ -6,8 +6,7 @@
 
 var app = require('../app');
 var debug = require('debug')('dgscs-back:server');
-var https = require('https');
-var fs = require('fs');
+var http = require('http');
 
 /**
  * Get port from environment and store in Express.
@@ -17,13 +16,10 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTPS server.
+ * Create HTTP server.
  */
 
-var server = https.createServer({
-  key: fs.readFileSync('server.key'),
-  cert: fs.readFileSync('server.cert')
-}, app)
+var server = http.createServer(app);
 
 /**
  * Listen to socket.io.
