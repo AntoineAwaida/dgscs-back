@@ -14,8 +14,14 @@ require('./config/passport');
 // Connecting to DDB
 mongoose.Promise = bluebird
 mongoose.connect('mongodb+srv://awaidaantoine:raphael8600A@dgs-avpa0.gcp.mongodb.net/alpha1?retryWrites=true', { useNewUrlParser: true })
-.then(()=> { console.log(`Succesfully Connected to the
-Mongodb Atlas database!`)})
+.then(()=> { 
+  
+  console.log(`Succesfully Connected to the
+Mongodb Atlas database!`)
+
+console.log("\n Notre fonction ici");
+
+})
 .catch(()=> { console.log(`Error Connecting to the Mongodb 
 Database Atlas database...`)})
 
