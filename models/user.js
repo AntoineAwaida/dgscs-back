@@ -72,7 +72,7 @@ UserSchema.methods.generateJwt = function() {
       status : this.status,
       photoURL : this.photoURL,
       exp: parseInt(expiry.getTime() / 1000),
-    }, token_password);
+    }, 'ARIE_SELINGER');
   };
 
 // Create the model
