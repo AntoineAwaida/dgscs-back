@@ -34,11 +34,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // On peut accéder aux avatars de manière statique
 app.use('/static/assets/img/avatars/', express.static('static/assets/img/avatars'));
 
-// HTTPS
-
-app.use(express.static(__dirname, { dotfiles: 'allow' } ));
-
-
 var api = require('./server/routes/api.route');
 
 app.use(function(req, res, next) {
