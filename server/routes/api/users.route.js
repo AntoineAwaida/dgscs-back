@@ -14,11 +14,7 @@ router.get('/deactivateuser/:id', UsersController.deactivateUser);
 
 router.get('/activateuser/:id', UsersController.activateUser);
 
-
-router.get('/mywp/:id', UsersController.getWPForUser); // En cours de traitement
-
-
-router.get('/mygroups/:id', UsersController.getGroupsForUser);
+//router.get('/mygroups/:id', UsersController.getGroupsForUser);
 
 router.post('/setpicture/:id', ProfilePictureController.setPicture);
 
