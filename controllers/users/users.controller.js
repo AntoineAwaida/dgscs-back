@@ -388,9 +388,9 @@ const getTasks = async function (userID) {
 const getFavs = async function (userID) {
     try {
         
-        const favs = await UserModel.findById(userID).select(["favTasks", "favWorkPackages"]).populate([{path : "favTasks", select : "name"}, {path : "favWorkPackages", select : "name"}]);
+        const favs = await UserModel.findById(userID).select(["favTasks", "favWorkPackages"]).populate([{path : "favTasks", select : "name endingDate"}, {path : "favWorkPackages", select : "name tasks"}]);
         return favs;
-    } catch (e) {
+    } catch (e) {  
         throw new Error("getFavs error -> " + e.message);
     }  
 } 
