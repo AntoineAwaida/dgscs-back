@@ -15,7 +15,7 @@ router.get('/deactivateuser/:id', UsersController.deactivateUser);
 router.get('/activateuser/:id', UsersController.activateUser);
 
 
-router.get('/mywp/:id', UsersController.getWPForUser);
+router.get('/mywp/:id', UsersController.getWPForUser); // En cours de traitement
 
 
 router.get('/mygroups/:id', UsersController.getGroupsForUser);
@@ -30,7 +30,7 @@ router.get('/getfavs/:id', UsersController.getFavs);
 
 // Routes avec permissions
 
-// Endpoints pour s'inscrire et se connecter
+// Endpoints pour s'inscrire et se connecter 
 
 router.post('/register', AuthController.register);
 router.post('/login', AuthController.login);
@@ -44,5 +44,6 @@ router.get('/getpendingusers', auth, UsersController.getPendingUsers); // ok
 // Endpoints pour récupérer ses propres infos
 
 router.get('/mygroups', auth, UsersController.getMyGroups); // ok
+router.get('/myworkpackages', auth, UsersController.getMyWorkpackages); // ok
 
-module.exports = router;
+module.exports = router; 

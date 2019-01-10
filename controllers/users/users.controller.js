@@ -255,7 +255,36 @@ exports.getMyGroups = async function (req, res) {
         // 2. On renvoie tous les groupes du user
 
         const groups = await getGroups(id);
+
+
         return res.status(200).send(groups);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+}
+
+exports.getMyWorkpackages = async function (req, res) {
+    try {
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+        try {
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+
+        // 2. On renvoie tous les workpackages du user
+
+        const workpackages = await getWorkpackages(id);
+
+
+        return res.status(200).send(workpackages);
 
     } catch (e) {
         return res.status(500).send({ error: e.message })
@@ -264,7 +293,7 @@ exports.getMyGroups = async function (req, res) {
 
 
 // Fonctions diverses
-
+ 
 const getStatus = async function (userID) {
     try {
         return (await UserModel.findById(userID).select(["status"])).status;
@@ -281,6 +310,16 @@ const getGroups = async function (userID) {
         throw new Error("getGroup error -> " + e.message);
     }  
 }
+
+const getWorkpackages = async function (userID) {
+    try {
+        const groups = await getGroups(userID);
+        const workpackages = await WorkPackageModel.find({ groups : { $in : groups }}).select(["name", "description"])
+        return workpackages;
+    } catch (e) {
+        throw new Error("getWorkpackages error -> " + e.message);
+    }  
+} 
 
 const isAdmin = async function (userID) {
     try {
