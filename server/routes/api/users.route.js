@@ -7,14 +7,9 @@ const UsersController = require('../../../controllers/users/users.controller');
 const ProfilePictureController = require('../../../controllers/users/profilepicture.controller');
  
 
-router.get('/getuser/:id', UsersController.getUser)
-
-
 router.get('/deactivateuser/:id', UsersController.deactivateUser);
 
 router.get('/activateuser/:id', UsersController.activateUser);
-
-//router.get('/mygroups/:id', UsersController.getGroupsForUser);
 
 router.post('/setpicture/:id', ProfilePictureController.setPicture);
 
