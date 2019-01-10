@@ -41,5 +41,6 @@ router.get('/getpendingusers', auth, UsersController.getPendingUsers); // ok
 
 router.get('/mygroups', auth, UsersController.getMyGroups); // ok
 router.get('/myworkpackages', auth, UsersController.getMyWorkpackages); // ok
+router.get('/mytasks', auth, UsersController.getMyTasks); // ok 
 
 module.exports = router; 

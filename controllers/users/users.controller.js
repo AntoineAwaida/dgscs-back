@@ -1,6 +1,7 @@
 const UserModel = require('../../models/user.js');
-const GroupModel = require('../../models/group')
-const WorkPackageModel = require('../../models/workpackage')
+const GroupModel = require('../../models/group');
+const WorkPackageModel = require('../../models/workpackage');
+const TaskModel = require('../../models/task');
 
 
 // Fonctions anciennes
@@ -291,8 +292,35 @@ exports.getMyWorkpackages = async function (req, res) {
     }
 }
 
+exports.getMyTasks = async function (req, res) {
+    try {
+        const id = tokenID(req);
 
-// Fonctions diverses
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+        try {
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+
+        // 2. On renvoie tous les tasks du user
+
+        const tasks = await getTasks(id);
+
+
+        return res.status(200).send(tasks);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+}
+
+
+// Fonctions diverses d'un user
  
 const getStatus = async function (userID) {
     try {
@@ -321,14 +349,18 @@ const getWorkpackages = async function (userID) {
     }  
 } 
 
-const isAdmin = async function (userID) {
+const getTasks = async function (userID) {
     try {
-        const status = await getStatus(userID);
-        return (status == "admin")
+        const groups = await getGroups(userID);
+        const tasks = await TaskModel.find({ groups : { $in : groups }}).select(["name", "status", "author"]);
+        return tasks;
     } catch (e) {
-        throw new Error("isAdmin error -> " + e.message);
-    }
-}
+        throw new Error("getTasks error -> " + e.message);
+    }  
+} 
+
+ 
+// Token et conditions sur le status
 
 const tokenID = function (req) {
     if (req.payload) {
@@ -336,6 +368,15 @@ const tokenID = function (req) {
     }
     else {
         throw new Error("tokenID error -> req.payload._id n'existe pas");
+    }
+}
+
+const isAdmin = async function (userID) {
+    try {
+        const status = await getStatus(userID);
+        return (status == "admin")
+    } catch (e) {
+        throw new Error("isAdmin error -> " + e.message);
     }
 }
 
