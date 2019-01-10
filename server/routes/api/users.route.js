@@ -17,7 +17,7 @@ router.put('/modifypassword/:id', UsersController.modifyPassword);
 
 router.put('/modifyfav/:id', UsersController.modifyFav);
 
-router.get('/getfavs/:id', UsersController.getFavs);
+//router.get('/getfavs/:id', UsersController.getFavs);
 
 // Routes avec permissions
 
@@ -37,5 +37,8 @@ router.get('/getpendingusers', auth, UsersController.getPendingUsers); // ok
 router.get('/mygroups', auth, UsersController.getMyGroups); // ok
 router.get('/myworkpackages', auth, UsersController.getMyWorkpackages); // ok
 router.get('/mytasks', auth, UsersController.getMyTasks); // ok 
+router.get('/myfavs', auth, UsersController.getMyFavs);
+
+// 
 
 module.exports = router; 

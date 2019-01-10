@@ -161,17 +161,17 @@ exports.modifyPassword = async function (req, res, err) {
 
 }
 
-exports.getFavs = async function (req, res, err) {
+// exports.getFavs = async function (req, res, err) {
 
-    UserModel.findById(req.params.id, 'favTasks favWorkPackages').populate('favTasks').populate('favWorkPackages').exec(function (err, user) {
+//     UserModel.findById(req.params.id, 'favTasks favWorkPackages').populate('favTasks').populate('favWorkPackages').exec(function (err, user) {
 
-        if (err) return res.status(500).send(err);
+//         if (err) return res.status(500).send(err);
 
-        return res.status(200).json(user);
+//         return res.status(200).json(user);
 
-    })
+//     })
 
-}
+// }
 
 // Fonctions avec permissions
 
@@ -263,7 +263,7 @@ exports.getMyGroups = async function (req, res) {
     } catch (e) {
         return res.status(500).send({ error: e.message })
     }
-}
+} 
 
 exports.getMyWorkpackages = async function (req, res) {
     try {
@@ -319,6 +319,32 @@ exports.getMyTasks = async function (req, res) {
     }
 }
 
+exports.getMyFavs = async function (req, res) {
+    try {
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+        try {
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+
+        // 2. On renvoie tous les favs du user
+
+        const favs = await getFavs(id);
+
+
+        return res.status(200).send(favs);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+}
 
 // Fonctions diverses d'un user
  
@@ -356,6 +382,16 @@ const getTasks = async function (userID) {
         return tasks;
     } catch (e) {
         throw new Error("getTasks error -> " + e.message);
+    }  
+} 
+
+const getFavs = async function (userID) {
+    try {
+        
+        const favs = await UserModel.findById(userID).select(["favTasks", "favWorkPackages"]).populate([{path : "favTasks", select : "name"}, {path : "favWorkPackages", select : "name"}]);
+        return favs;
+    } catch (e) {
+        throw new Error("getFavs error -> " + e.message);
     }  
 } 
 
