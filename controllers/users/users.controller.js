@@ -262,9 +262,12 @@ exports.editMyPassword = async function (req, res) {
 
         const id = tokenID(req);
 
-        // 1. On vérifie qu'il est bien admin
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
         try {
-            await mustBeAdmin(id);
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
         } catch (e) {
             return res.status(401).send({ error: e.message })
         }
@@ -298,9 +301,12 @@ exports.editMyFavs = async function (req, res) {
 
         const id = tokenID(req);
 
-        // 1. On vérifie qu'il est bien admin
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
         try {
-            await mustBeAdmin(id);
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
         } catch (e) {
             return res.status(401).send({ error: e.message })
         }
