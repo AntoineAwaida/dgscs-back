@@ -4,58 +4,6 @@ const WorkPackageModel = require('../../models/workpackage');
 const TaskModel = require('../../models/task');
 
 
-// Fonctions anciennes
-
-exports.getUsersPrevious = async function (req, res) {
-    UserModel.find().select({ 'password': false, '__v': false }).exec((err, users) => {
-        if (err) return res.status(500).send(err);
-
-        res.json(users);
-    });
-}
-
-exports.getActiveUsersPrevious = async function (req, res) {
-    UserModel.find({ $or: [{ status: 'admin' }, { status: 'active' }] }).select({ 'password': false, '__v': false }).exec((err, users) => {
-        if (err) return res.status(500).send(err);
-
-        res.json(users);
-    });
-}
-
-exports.getPendingUsersPrevious = async function (req, res) {
-    UserModel.find({ status: 'pending' }).select({ 'password': false, '__v': false }).exec((err, users) => {
-        if (err) return res.status(500).send(err);
-
-        res.json(users);
-    });
-}
-
-
-// Fonctions en cours de traitement 
-
-
-exports.getUser = async function (req, res) {
-    UserModel.findById(req.params.id, function (err, user) {
-
-        if (err) return res.status(500).send(err);
-
-        res.json(user);
-
-    })
-}
-
-exports.getFiles = async function (req, res) {
-    if (!req.payload._id) {
-        return res.status(401).json({ "status": 401, "message": "UnauthorizedError: private profile" })
-    }
-    try {
-        const user = await UserModel.findById(req.params.userID, { select: "files" })
-            .populate({ path: "files", populate: { path: "author", select: ["first_name", "last_name"] } });
-        return res.status(200).send(user.files);
-    } catch (e) {
-        return res.status(500).json({ message: e.message });
-    }
-}
 
 exports.deactivateUser = async function (req, res) {
 
@@ -77,45 +25,6 @@ exports.activateUser = async function (req, res) {
         return res.status(200).json("L'utilisateur a bien été activé.")
 
     })
-
-}
-
-exports.getGroupsForUser = async function (req, res, err) {
-
-    GroupModel.find({ members: req.params.id }, function (err, groups) {
-
-        if (err) return res.status(500).send(err);
-
-        return res.status(200).json(groups);
-
-    })
-
-}
-
-exports.getWPForUser = async function (req, res, err) {
-
-    GroupModel.find({ members: req.params.id }, async function (err, groups) {
-
-        if (err) return res.status(500).send(err);
-
-        let wp = [];
-
-
-        groups.forEach((group) => {
-            group.workpackages.forEach((workpackage) => wp.push(workpackage));
-        })
-
-        WorkPackageModel.find({ '_id': { $in: wp } }, function (err, wp) {
-
-            if (err) return res.status(500).send(err);
-
-            return res.status(200).json(wp);
-
-        })
-
-    })
-
-
 
 }
 
@@ -161,19 +70,12 @@ exports.modifyPassword = async function (req, res, err) {
 
 }
 
-// exports.getFavs = async function (req, res, err) {
-
-//     UserModel.findById(req.params.id, 'favTasks favWorkPackages').populate('favTasks').populate('favWorkPackages').exec(function (err, user) {
-
-//         if (err) return res.status(500).send(err);
-
-//         return res.status(200).json(user);
-
-//     })
-
-// }
 
 // Fonctions avec permissions
+
+// TO DO : getMyFiles
+
+// Fonctions pour admin 
 
 exports.getUsers = async function (req, res) {
     try {
@@ -237,6 +139,9 @@ exports.getPendingUsers = async function (req, res) {
         return res.status(500).send({ error: e.message })
     }
 }
+
+
+// Fonctions pour un User
 
 exports.getMyGroups = async function (req, res) {
     try {
@@ -346,7 +251,36 @@ exports.getMyFavs = async function (req, res) {
     }
 }
 
-// Fonctions diverses d'un user
+exports.getMyFiles = async function (req, res) {
+    try {
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+        try {
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+
+        // 2. On renvoie tous les files du user
+
+        const files = await getFiles(id);
+
+
+        return res.status(200).send(files);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+}
+
+
+
+// Autres fonctions 
  
 const getStatus = async function (userID) {
     try {
@@ -392,6 +326,16 @@ const getFavs = async function (userID) {
         return favs;
     } catch (e) {  
         throw new Error("getFavs error -> " + e.message);
+    }  
+} 
+
+const getFiles = async function (userID) {
+    try {
+        
+        const files = (await UserModel.findById(userID).select(["files"]).populate({ path: "files", select : "-__v", populate: { path: "author", select: ["first_name", "last_name"] } })).files;
+        return files;
+    } catch (e) {  
+        throw new Error("getFiles error -> " + e.message);
     }  
 } 
 
