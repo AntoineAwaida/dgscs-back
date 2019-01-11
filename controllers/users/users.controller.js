@@ -41,41 +41,77 @@ exports.modifyFav = async function (req, res, err) {
 
 }
 
-exports.modifyPassword = async function (req, res, err) {
+// exports.modifyPassword = async function (req, res, err) {
 
 
-    UserModel.findById(req.params.id, async function (err, user) {
+//     UserModel.findById(req.params.id, async function (err, user) {
 
-        if (err) return res.status(500).send(err);
+//         if (err) return res.status(500).send(err);
 
-        user.password = req.body.password;
-
-
-        try {
+//         user.password = req.body.password;
 
 
-            user.save();
+//         try {
 
-            return res.status(200).json("ok");
 
-        }
+//             user.save();
 
-        catch (e) {
+//             return res.status(200).json("ok");
 
-            return res.status(500).send(e);
+//         }
 
-        }
+//         catch (e) {
 
-    })
+//             return res.status(500).send(e);
 
-}
+//         }
+
+//     })
+
+// }
 
 
 // Fonctions avec permissions
 
-// TO DO : getMyFiles
+exports.editMyPassword = async function (req, res) {
+    try {
+
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien admin
+        try {
+            await mustBeAdmin(id);
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On vérifie qu'il y a l'attribut req.body.password
+
+        if(!req.body.password){
+            throw new Error("L'attribut 'password' est manquant");
+        }
+
+        // 3. On change le password du user (on doit appeler user.save() pour le cryptage)
+
+        let user = await UserModel.findById(id).select("password");
+        user.password = req.body.password;
+        await user.save();
+
+        return res.status(200).send({ message : 'password bien modifié'});
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+  
+
+  
+
+
+}
 
 // Fonctions pour admin 
+
+// GET
 
 exports.getUsers = async function (req, res) {
     try {
@@ -139,6 +175,10 @@ exports.getPendingUsers = async function (req, res) {
         return res.status(500).send({ error: e.message })
     }
 }
+
+// PUT
+
+
 
 
 // Fonctions pour un User
@@ -321,7 +361,6 @@ const getTasks = async function (userID) {
 
 const getFavs = async function (userID) {
     try {
-        
         const favs = await UserModel.findById(userID).select(["favTasks", "favWorkPackages"]).populate([{path : "favTasks", select : "name"}, {path : "favWorkPackages", select : "name"}]);
         return favs;
     } catch (e) {  

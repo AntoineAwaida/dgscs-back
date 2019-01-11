@@ -13,7 +13,7 @@ router.get('/activateuser/:id', UsersController.activateUser);
 
 router.post('/setpicture/:id', ProfilePictureController.setPicture);
 
-router.put('/modifypassword/:id', UsersController.modifyPassword);
+// router.put('/modifypassword/:id', UsersController.modifyPassword);
 
 router.put('/modifyfav/:id', UsersController.modifyFav);
 
@@ -38,9 +38,11 @@ router.get('/mygroups', auth, UsersController.getMyGroups); // ok
 router.get('/myworkpackages', auth, UsersController.getMyWorkpackages); // ok
 router.get('/mytasks', auth, UsersController.getMyTasks); // ok 
 router.get('/myfavs', auth, UsersController.getMyFavs); // ok
-router.get('/myfiles', auth, UsersController.getMyFiles);
+router.get('/myfiles', auth, UsersController.getMyFiles);  // ok
 
 
-// 
+// Endpoints pour modifier ses données
+
+router.put('/editmypassword', auth, UsersController.editMyPassword);
 
 module.exports = router; 
