@@ -36,7 +36,7 @@ router.get('/myfiles', auth, UsersController.getMyFiles);  // ok
 
 router.put('/editmypassword', auth, UsersController.editMyPassword); // ok
 router.put('/editmyfavs', auth, UsersController.editMyFavs); // ok
-router.post('/setpicture/:id', auth, ProfilePictureController.setPicture2); // pas ok
+router.post('/setpicture', auth, ProfilePictureController.setPicture2); // pas ok
 
 
 module.exports = router; 
