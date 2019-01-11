@@ -65,7 +65,8 @@ exports.setPicture2 = async function (req, res) {
         cb(null, './static/assets/img/avatars');
       },
       filename: function (req, file, cb) {
-        cb(null, id + '.' + file.mimetype.split('/')[1]);
+        // cb(null, id + '.' + file.mimetype.split('/')[1]);
+        cb(null, id + '.png');
       }
     });
 
