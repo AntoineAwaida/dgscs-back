@@ -84,7 +84,7 @@ exports.setPicture2 = async function (req, res) {
     await avatarUpload(req, res);
 
     // 3. On enregistrer dans la BDD le l'url du fichier
-
+    console.log(req.file);
     await UserModel.findByIdAndUpdate(id, { photoURL: globals.api + req.file.path });
 
     return res.status(200).json({ message: "Photo de profil bien modifiée " });
