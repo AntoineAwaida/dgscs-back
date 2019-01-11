@@ -9,8 +9,8 @@ const ProfilePictureController = require('../../../controllers/users/profilepict
 
 // Endpoints pour s'inscrire et se connecter 
 
-router.post('/register', AuthController.register);
-router.post('/login', AuthController.login);
+router.post('/register', AuthController.register); // ok
+router.post('/login', AuthController.login); // ok
 
 // Endpoints pour récupérer les users en tout genre (admin)
 
@@ -36,7 +36,7 @@ router.get('/myfiles', auth, UsersController.getMyFiles);  // ok
 
 router.put('/editmypassword', auth, UsersController.editMyPassword); // ok
 router.put('/editmyfavs', auth, UsersController.editMyFavs); // ok
-router.post('/setpicture', auth, ProfilePictureController.setPicture2); // pas ok
+router.post('/setpicture', auth, ProfilePictureController.setPicture); // ok
 
 
 module.exports = router; 
