@@ -5,19 +5,7 @@ const auth = require('../auth-payload');
 const AuthController = require('../../../controllers/users/auth.controller');
 const UsersController = require('../../../controllers/users/users.controller');
 const ProfilePictureController = require('../../../controllers/users/profilepicture.controller');
- 
-
-//router.get('/deactivateuser/:id', UsersController.deactivateUser);
-
-//router.get('/activateuser/:id', UsersController.activateUser);
-
-router.post('/setpicture/:id', ProfilePictureController.setPicture);
-
-
-// router.put('/modifyfav/:id', UsersController.modifyFav);
- 
-
-// Routes avec permissions
+  
 
 // Endpoints pour s'inscrire et se connecter 
 
@@ -46,9 +34,9 @@ router.get('/myfiles', auth, UsersController.getMyFiles);  // ok
 
 // Endpoints pour modifier ses données
 
-router.put('/editmypassword', auth, UsersController.editMyPassword);
-router.put('/editmyfavs', auth, UsersController.editMyFavs);
-
+router.put('/editmypassword', auth, UsersController.editMyPassword); // ok
+router.put('/editmyfavs', auth, UsersController.editMyFavs); // ok
+router.post('/setpicture/:id', auth, ProfilePictureController.setPicture2); // pas ok
 
 
 module.exports = router; 
