@@ -7,9 +7,9 @@ const UsersController = require('../../../controllers/users/users.controller');
 const ProfilePictureController = require('../../../controllers/users/profilepicture.controller');
  
 
-router.get('/deactivateuser/:id', UsersController.deactivateUser);
+//router.get('/deactivateuser/:id', UsersController.deactivateUser);
 
-router.get('/activateuser/:id', UsersController.activateUser);
+//router.get('/activateuser/:id', UsersController.activateUser);
 
 router.post('/setpicture/:id', ProfilePictureController.setPicture);
 
@@ -30,6 +30,11 @@ router.get('/getusers', auth, UsersController.getUsers); // ok
 router.get('/getactiveusers', auth, UsersController.getActiveUsers); // ok
 router.get('/getpendingusers', auth, UsersController.getPendingUsers); // ok
 
+// Endpoints pour gérer le statut d'un user (admin)
+
+router.put('/desactivateuser/:id', auth, UsersController.desactivateUser); // ok
+router.put('/activateuser/:id', auth, UsersController.activateUser); // ok
+
 // Endpoints pour récupérer ses propres infos
 
 router.get('/mygroups', auth, UsersController.getMyGroups); // ok
@@ -43,6 +48,7 @@ router.get('/myfiles', auth, UsersController.getMyFiles);  // ok
 
 router.put('/editmypassword', auth, UsersController.editMyPassword);
 router.put('/editmyfavs', auth, UsersController.editMyFavs);
+
 
 
 module.exports = router; 

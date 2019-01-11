@@ -16,17 +16,17 @@ const TaskModel = require('../../models/task');
 
 // }
 
-exports.activateUser = async function (req, res) {
+// exports.activateUser = async function (req, res) {
 
-    UserModel.findByIdAndUpdate(req.params.id, { status: 'active' }, function (err) {
+//     UserModel.findByIdAndUpdate(req.params.id, { status: 'active' }, function (err) {
 
-        if (err) return res.status(500).send(err);
+//         if (err) return res.status(500).send(err);
 
-        return res.status(200).json("L'utilisateur a bien été activé.")
+//         return res.status(200).json("L'utilisateur a bien été activé.")
 
-    })
+//     })
 
-}
+// }
 
 // 1. Fonctions pour admin
 
@@ -97,7 +97,7 @@ exports.getPendingUsers = async function (req, res) {
 
 // PUT
 
-exports.deactivateUser = async function (req, res) {
+exports.desactivateUser = async function (req, res) {
 
     try {
 
@@ -119,6 +119,27 @@ exports.deactivateUser = async function (req, res) {
     
 }
 
+exports.activateUser = async function (req, res) {
+
+    try {
+
+        // 1. On vérifie qu'il est bien admin
+        try {
+            const id = tokenID(req);
+            await mustBeAdmin(id);
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On active le user
+        await UserModel.findByIdAndUpdate(req.params.id, { status: 'active' });
+        return res.status(200).send({ message : "L'utilisateur a bien été activé"})
+
+    }catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+    
+}
 
 
 // 2. Fonctions pour un User actif
