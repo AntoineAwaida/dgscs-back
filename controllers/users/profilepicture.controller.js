@@ -1,6 +1,7 @@
 const UserModel = require('../../models/user')
 const globals = require('../../config/globals')
 const multer = require('multer');
+const util = require('util');
 
 const tokenID = require('./users.controller').tokenID;
 const getStatus = require('./users.controller').getStatus;
