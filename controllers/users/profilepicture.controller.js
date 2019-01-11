@@ -2,6 +2,9 @@ const UserModel = require('../../models/user')
 const globals = require('../../config/globals')
 const multer = require('multer');
 
+const tokenID = require('./users.controller').tokenID;
+const getStatus = require('./users.controller').getStatus;
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './static/assets/img/avatars');
