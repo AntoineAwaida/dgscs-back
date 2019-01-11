@@ -6,15 +6,6 @@ const util = require('util');
 const tokenID = require('./users.controller').tokenID;
 const getStatus = require('./users.controller').getStatus;
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './static/assets/img/avatars');
-  },
-  filename: function (req, file, cb) {
-    cb(null, tokenID(req) + '.' + file.mimetype.split('/')[1]);
-  }
-});
-
 const fileFilter = (req, file, cb) => {
   //rejeter un fichier
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -24,17 +15,6 @@ const fileFilter = (req, file, cb) => {
     cb(null, false);
   }
 }
-
-const upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 512 * 512 * 5
-  },
-  fileFilter: fileFilter
-});
-
-
-
 
 exports.setPicture = async function (req, res, err) {
 
@@ -80,14 +60,32 @@ exports.setPicture2 = async function (req, res) {
 
     // 2. On uploader la photo de profil
 
+    const storage = multer.diskStorage({
+      destination: function (req, file, cb) {
+        cb(null, './static/assets/img/avatars');
+      },
+      filename: function (req, file, cb) {
+        cb(null, id + '.' + file.mimetype.split('/')[1]);
+      }
+    });
+
+    const upload = multer({
+      storage: storage,
+      limits: {
+        fileSize: 512 * 512 * 5
+      },
+      fileFilter: fileFilter
+    });
+
     const avatarUpload = util.promisify(upload.single('profilepicture'));
     await avatarUpload(req, res);
 
     // 3. On enregistrer dans la BDD le l'url du fichier
     console.log(req.file);
-    await UserModel.findByIdAndUpdate(id, { photoURL: globals.api + req.file.path });
+    const photoURL = globals.api + req.file.path;
+    await UserModel.findByIdAndUpdate(id, { photoURL: photoURL });
 
-    return res.status(200).json({ message: "Photo de profil bien modifiée " });
+    return res.status(200).json({ message: "Photo de profil bien modifiée ", photoURL : photoURL });
 
   } catch (e) {
     return res.status(500).send({ message: e.message });
