@@ -423,4 +423,4 @@ const mustBeAdmin = async function (userID) {
     }
 } 
 
-exports.tokenID;
+exports.tokenID = this.tokenID;
