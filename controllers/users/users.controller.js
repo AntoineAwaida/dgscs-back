@@ -3,31 +3,6 @@ const GroupModel = require('../../models/group');
 const WorkPackageModel = require('../../models/workpackage');
 const TaskModel = require('../../models/task');
 
-
-
-// exports.deactivateUser2 = async function (req, res) {
-
-//     UserModel.findByIdAndUpdate(req.params.id, { status: 'inactive' }, function (err) {
-
-//         if (err) return res.status(500).send(err);
-
-//         return res.status(200).json("L'utilisateur a bien été désactivé.")
-//     })
-
-// }
-
-// exports.activateUser = async function (req, res) {
-
-//     UserModel.findByIdAndUpdate(req.params.id, { status: 'active' }, function (err) {
-
-//         if (err) return res.status(500).send(err);
-
-//         return res.status(200).json("L'utilisateur a bien été activé.")
-
-//     })
-
-// }
-
 // 1. Fonctions pour admin
 
 // GET 
@@ -142,7 +117,7 @@ exports.activateUser = async function (req, res) {
 }
 
 
-// 2. Fonctions pour un User actif
+// 2. Fonctions pour un User 'active' ou 'admin'
 
 // GET 
 
@@ -360,7 +335,6 @@ exports.editMyFavs = async function (req, res) {
 }
 
 
-
 // 3. Fonctions diverses
  
 const getStatus = async function (userID) {
@@ -411,7 +385,6 @@ const getFavs = async function (userID) {
 
 const getFiles = async function (userID) {
     try {
-        
         const files = (await UserModel.findById(userID).select(["files"]).populate({ path: "files", select : "-__v", populate: { path: "author", select: ["first_name", "last_name"] } })).files;
         return files;
     } catch (e) {  
