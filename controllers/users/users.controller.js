@@ -424,3 +424,4 @@ const mustBeAdmin = async function (userID) {
 } 
 
 exports.tokenID = tokenID;
+exports.getStatus = getStatus;
