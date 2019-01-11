@@ -28,90 +28,27 @@ exports.activateUser = async function (req, res) {
 
 }
 
-exports.modifyFav = async function (req, res, err) {
+// exports.modifyFav = async function (req, res, err) {
 
 
-    UserModel.findByIdAndUpdate(req.params.id, { favWorkPackages: req.body.favwp, favTasks: req.body.favtasks }, function (err) {
-
-        if (err) return res.status(500).send(err);
-
-        return res.status(200).json("Modif des favoris ok!")
-
-    })
-
-}
-
-// exports.modifyPassword = async function (req, res, err) {
-
-
-//     UserModel.findById(req.params.id, async function (err, user) {
+//     UserModel.findByIdAndUpdate(req.params.id, { favWorkPackages: req.body.favwp, favTasks: req.body.favtasks }, function (err) {
 
 //         if (err) return res.status(500).send(err);
 
-//         user.password = req.body.password;
-
-
-//         try {
-
-
-//             user.save();
-
-//             return res.status(200).json("ok");
-
-//         }
-
-//         catch (e) {
-
-//             return res.status(500).send(e);
-
-//         }
+//         return res.status(200).json("Modif des favoris ok!")
 
 //     })
 
 // }
 
 
+
 // Fonctions avec permissions
 
-exports.editMyPassword = async function (req, res) {
-    try {
 
-        const id = tokenID(req);
+// 1. Fonctions pour admin
 
-        // 1. On vérifie qu'il est bien admin
-        try {
-            await mustBeAdmin(id);
-        } catch (e) {
-            return res.status(401).send({ error: e.message })
-        }
-
-        // 2. On vérifie qu'il y a l'attribut req.body.password
-
-        if(!req.body.password){
-            throw new Error("L'attribut 'password' est manquant");
-        }
-
-        // 3. On change le password du user (on doit appeler user.save() pour le cryptage)
-
-        let user = await UserModel.findById(id).select("password");
-        user.password = req.body.password;
-        await user.save();
-
-        return res.status(200).send({ message : 'password bien modifié'});
-
-    } catch (e) {
-        return res.status(500).send({ error: e.message })
-    }
-  
-
-  
-
-
-}
-
-// Fonctions pour admin 
-
-// GET
+// GET 
 
 exports.getUsers = async function (req, res) {
     try {
@@ -176,12 +113,12 @@ exports.getPendingUsers = async function (req, res) {
     }
 }
 
-// PUT
 
 
 
+// 2. Fonctions pour un User actif
 
-// Fonctions pour un User
+// GET 
 
 exports.getMyGroups = async function (req, res) {
     try {
@@ -317,10 +254,82 @@ exports.getMyFiles = async function (req, res) {
         return res.status(500).send({ error: e.message })
     }
 }
+ 
+// PUT
+
+exports.editMyPassword = async function (req, res) {
+    try {
+
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien admin
+        try {
+            await mustBeAdmin(id);
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On vérifie qu'il y a l'attribut req.body.password
+
+        if(!req.body.password){
+            throw new Error("L'attribut 'password' est manquant");
+        }
+
+        // 3. On change le password du user (on doit appeler user.save() pour le cryptage)
+
+        let user = await UserModel.findById(id).select("password");
+        user.password = req.body.password;
+        await user.save();
+
+        return res.status(200).send({ message : 'password bien modifié'});
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+  
+
+  
+
+
+}
+
+exports.editMyFavs = async function (req, res) {
+    try {
+
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien admin
+        try {
+            await mustBeAdmin(id);
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On vérifie qu'il y a les bons attributs
+
+        if((!req.body.favwp)||(!req.body.favtasks)){
+            throw new Error("L'attribut 'favwp' ou 'favtasks' est manquant");
+        }
+
+        // 3. On change les favs du user
+
+        await UserModel.findByIdAndUpdate(id, { favWorkPackages: req.body.favwp, favTasks: req.body.favtasks });
+
+        return res.status(200).send({ message : 'favs bien modifiés'});
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+  
+
+  
+
+
+}
 
 
 
-// Autres fonctions 
+// 3. Fonctions diverses
  
 const getStatus = async function (userID) {
     try {

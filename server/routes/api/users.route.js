@@ -13,11 +13,9 @@ router.get('/activateuser/:id', UsersController.activateUser);
 
 router.post('/setpicture/:id', ProfilePictureController.setPicture);
 
-// router.put('/modifypassword/:id', UsersController.modifyPassword);
 
-router.put('/modifyfav/:id', UsersController.modifyFav);
-
-//router.get('/getfavs/:id', UsersController.getFavs);
+// router.put('/modifyfav/:id', UsersController.modifyFav);
+ 
 
 // Routes avec permissions
 
@@ -44,5 +42,7 @@ router.get('/myfiles', auth, UsersController.getMyFiles);  // ok
 // Endpoints pour modifier ses données
 
 router.put('/editmypassword', auth, UsersController.editMyPassword);
+router.put('/editmyfavs', auth, UsersController.editMyFavs);
+
 
 module.exports = router; 
