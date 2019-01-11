@@ -5,16 +5,16 @@ const TaskModel = require('../../models/task');
 
 
 
-exports.deactivateUser = async function (req, res) {
+// exports.deactivateUser2 = async function (req, res) {
 
-    UserModel.findByIdAndUpdate(req.params.id, { status: 'inactive' }, function (err) {
+//     UserModel.findByIdAndUpdate(req.params.id, { status: 'inactive' }, function (err) {
 
-        if (err) return res.status(500).send(err);
+//         if (err) return res.status(500).send(err);
 
-        return res.status(200).json("L'utilisateur a bien été désactivé.")
-    })
+//         return res.status(200).json("L'utilisateur a bien été désactivé.")
+//     })
 
-}
+// }
 
 exports.activateUser = async function (req, res) {
 
@@ -27,24 +27,6 @@ exports.activateUser = async function (req, res) {
     })
 
 }
-
-// exports.modifyFav = async function (req, res, err) {
-
-
-//     UserModel.findByIdAndUpdate(req.params.id, { favWorkPackages: req.body.favwp, favTasks: req.body.favtasks }, function (err) {
-
-//         if (err) return res.status(500).send(err);
-
-//         return res.status(200).json("Modif des favoris ok!")
-
-//     })
-
-// }
-
-
-
-// Fonctions avec permissions
-
 
 // 1. Fonctions pour admin
 
@@ -113,6 +95,29 @@ exports.getPendingUsers = async function (req, res) {
     }
 }
 
+// PUT
+
+exports.deactivateUser = async function (req, res) {
+
+    try {
+
+        // 1. On vérifie qu'il est bien admin
+        try {
+            const id = tokenID(req);
+            await mustBeAdmin(id);
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On désactive le user
+        await UserModel.findByIdAndUpdate(req.params.id, { status: 'inactive' });
+        return res.status(200).send({ message : "L'utilisateur a bien été désactivé"})
+
+    }catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+    
+}
 
 
 
