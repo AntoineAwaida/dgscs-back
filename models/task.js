@@ -7,6 +7,7 @@ const TaskSchema = new mongoose.Schema(
         author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
         description: String,
         groups: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }],
+        tasks: [{type:mongoose.Schema.Types.ObjectId, ref: 'Task'}],
         startingDate: Date,
         endingDate: Date,
         files : { type : [{ type: mongoose.Schema.Types.ObjectId, ref: 'File' }], default : []},
