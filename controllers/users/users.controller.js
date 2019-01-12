@@ -334,8 +334,35 @@ exports.editMyFavs = async function (req, res) {
 
 }
 
+// 3. Fonctions publiques
 
-// 3. Fonctions diverses
+exports.getUser = async function (req, res) {
+    try {
+
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+        try {
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+        // 2. On renvoie le user
+
+        const user = await UserModel.findById(req.params.userID).select(["first_name", "last_name", "photoURL", "email"]);
+        return res.status(200).send(user);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+}
+
+
+// 4. Fonctions diverses
  
 const getStatus = async function (userID) {
     try {
