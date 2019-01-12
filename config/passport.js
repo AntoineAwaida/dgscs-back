@@ -16,13 +16,13 @@ passport.use(new LocalStrategy({
 
         // Return if user not found in database
         if (!user) {
-          return done(null, false, 'User not found (passport.js)');
+          return done(null, false, 'email ou mot de passe incorrect');
         }
 
         // Return if password is wrong
         if (!user.validPassword(password)) {
           return done(null, false, 
-            'Password is wrong (passport.js)'
+            'email ou mot de passe incorrect'
           );
         }
         

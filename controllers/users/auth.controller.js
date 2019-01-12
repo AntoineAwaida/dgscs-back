@@ -1,5 +1,6 @@
 var passport = require('passport');
 var UserModel = require('../../models/user')
+
 exports.register = async function (req, res) {
     var user = new UserModel();
     try {
