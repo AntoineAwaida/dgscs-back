@@ -38,5 +38,9 @@ router.put('/editmypassword', auth, UsersController.editMyPassword); // ok
 router.put('/editmyfavs', auth, UsersController.editMyFavs); // ok
 router.post('/setpicture', auth, ProfilePictureController.setPicture); // ok
 
+// Endpoints publics
+
+router.get('/getuser/:userID', auth, UsersController.getUser); // ok 
+
 
 module.exports = router; 
