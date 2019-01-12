@@ -11,7 +11,7 @@ exports.register = async function (req, res) {
 
         try {
             var email = (await UserModel.findOne({ email: req.body.email })).email;
-            return res.status(500).json({ "status": 500, "token": null, "message": "Un compte associé à l'adresse" + req.body.email + "existe déjà" });
+            return res.status(500).json({ "status": 500, "token": null, "message": "Un compte associé à l'adresse " + req.body.email + " existe déjà" });
 
         } catch (e) {
 
