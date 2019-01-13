@@ -68,21 +68,29 @@ exports.getTaskFromUser = async function (req, res, err) {
       const taskID = req.body.taskID;
       const userID = req.params.userID;
 
-      let groups = await GroupModel.find({ members: { $in: userID } }).populate('tasks').populate('author'); // Les groupes du User
-      for (let i = 0; i < groups.length; i++) {
-        let group = groups[i];
-        for (let j = 0; j < group.tasks.length; j++) {
-          let task = group.tasks[j];
-          if (task._id.equals(taskID)) {
-            task = await TaskModel.findById(task._id)
+      let task = task = await TaskModel.findById(taskID)
               .populate({ path: 'author', select: ['first_name', 'last_name'] })
               .populate({ path: 'groups', select: 'name' })
               .populate('tasks')
               .populate({ path: 'files', populate: { path: 'author', select: ['first_name', 'last_name'] } });
-            return res.status(200).send(task);
-          }
-        }
-      }
+      
+      return res.status(200).send(task);
+
+      // let groups = await GroupModel.find({ members: { $in: userID } }).populate('tasks').populate('author'); // Les groupes du User
+      // for (let i = 0; i < groups.length; i++) {
+      //   let group = groups[i];
+      //   for (let j = 0; j < group.tasks.length; j++) {
+      //     let task = group.tasks[j];
+      //     if (task._id.equals(taskID)) {
+      //       task = await TaskModel.findById(task._id)
+      //         .populate({ path: 'author', select: ['first_name', 'last_name'] })
+      //         .populate({ path: 'groups', select: 'name' })
+      //         .populate('tasks')
+      //         .populate({ path: 'files', populate: { path: 'author', select: ['first_name', 'last_name'] } });
+      //       return res.status(200).send(task);
+      //     }
+      //   }
+      // }
       return res.status(500).json("Ce user ne peut pas accéder à cette tâche");
     }
   } catch (e) {
