@@ -1,10 +1,13 @@
 const TaskModel = require('../../models/task');
 const GroupModel = require('../../models/group');
 const WorkPackageModel = require('../../models/workpackage');
-const UserModel = require('../../models/user');
 
+const tokenID = require('../users/users.controller').tokenID;
+const getStatus = require('../users/users.controller').getStatus;
 
-exports.create = async function (req, res, err) {
+// ANCIENNES FONCTIONS
+ 
+exports.create2 = async function (req, res, err) {
   try {
     // Créer la tâche
     let task = req.body;
@@ -52,8 +55,8 @@ exports.getTasksFromUser = async function (req, res, err) {
         }
         if (!isAlready) {
           task = await TaskModel.findById(task._id)
-                .populate({ path: 'author', select: ['first_name', 'last_name'] })
-                .populate({ path : 'groups', select:'name' });
+            .populate({ path: 'author', select: ['first_name', 'last_name'] })
+            .populate({ path: 'groups', select: 'name' });
           tasks.push(task);
         }
 
@@ -95,10 +98,10 @@ exports.getTaskFromUser = async function (req, res, err) {
           let task = group.tasks[j];
           if (task._id.equals(taskID)) {
             task = await TaskModel.findById(task._id)
-                .populate({ path: 'author', select: ['first_name', 'last_name'] })
-                .populate({ path : 'groups', select:'name' })
-                .populate('tasks')
-                .populate({ path : 'files', populate : { path: 'author', select: ['first_name', 'last_name'] } });
+              .populate({ path: 'author', select: ['first_name', 'last_name'] })
+              .populate({ path: 'groups', select: 'name' })
+              .populate('tasks')
+              .populate({ path: 'files', populate: { path: 'author', select: ['first_name', 'last_name'] } });
             return res.status(200).send(task);
           }
         }
@@ -106,7 +109,7 @@ exports.getTaskFromUser = async function (req, res, err) {
       return res.status(500).json("Ce user ne peut pas accéder à cette tâche");
     }
   } catch (e) {
-    return res.status(500).json("Impossible de récupérer les tâches du user : "+e.message);
+    return res.status(500).json("Impossible de récupérer les tâches du user : " + e.message);
   }
 
 }
@@ -119,52 +122,52 @@ exports.editTask = async function (req, res, err) {
       return res.status(500).json("Il manque le paramètre '_id'");
     }
     else {
-    
+
       let taskID = req.body._id;
       let userID = req.params.userID;
 
       let task = await TaskModel.findById(taskID);
       let authorID = task.author;
 
-      if(!authorID.equals(userID)){
+      if (!authorID.equals(userID)) {
         return res.status(500).json("Vous n'êtes pas l'auteur de la tâche");
       }
       else {
         let taskUpdate = {};
 
-        if(req.body.description){
+        if (req.body.description) {
           taskUpdate.description = req.body.description;
         }
 
-        if(req.body.name){
+        if (req.body.name) {
           taskUpdate.name = req.body.name;
         }
 
-        if(req.body.startingDate){
+        if (req.body.startingDate) {
           taskUpdate.startingDate = req.body.startingDate;
         }
 
-        if(req.body.endingDate){
+        if (req.body.endingDate) {
           taskUpdate.endingDate = req.body.endingDate;
         }
 
-        if( (req.body.status) && ( (req.body.status=='pending') || (req.body.status=='ongoing') || (req.body.status=='done') )){
+        if ((req.body.status) && ((req.body.status == 'pending') || (req.body.status == 'ongoing') || (req.body.status == 'done'))) {
           taskUpdate.status = req.body.status;
         }
 
-        if(req.body.groups){
+        if (req.body.groups) {
           taskUpdate.groups = req.body.groups;
         }
 
 
         console.log(taskUpdate);
-        await TaskModel.findByIdAndUpdate(taskID, taskUpdate); 
+        await TaskModel.findByIdAndUpdate(taskID, taskUpdate);
         return res.status(200).json("User bien modifié");
-        
+
       }
     }
   } catch (e) {
-    return res.status(500).json("Impossible d'accéder à cette tâche' : "+e.message);
+    return res.status(500).json("Impossible d'accéder à cette tâche' : " + e.message);
   }
 
 }
@@ -175,11 +178,11 @@ exports.editStatus = async function (req, res, err) {
     if (!req.body.taskID) {
       return res.status(500).json("Il manque le paramètre 'taskID'");
     }
-    else if( (!req.body.status) || ( (req.body.status!='pending') && (req.body.status!='ongoing') && (req.body.status!='done') )) {
+    else if ((!req.body.status) || ((req.body.status != 'pending') && (req.body.status != 'ongoing') && (req.body.status != 'done'))) {
       return res.status(500).json("le paramètre status est manquant ou est différent de 'pending', 'done' et 'ongoing'");
     }
     else {
-    
+
       const taskID = req.body.taskID;
       const userID = req.params.userID;
       const status = req.body.status;
@@ -190,8 +193,8 @@ exports.editStatus = async function (req, res, err) {
         for (let j = 0; j < group.tasks.length; j++) {
           let task = group.tasks[j];
           if (task._id.equals(taskID)) {
-            
-            await TaskModel.findByIdAndUpdate(taskID, {status : status});
+
+            await TaskModel.findByIdAndUpdate(taskID, { status: status });
             return res.status(200).json("Le user a bien été modifié")
           }
         }
@@ -199,18 +202,18 @@ exports.editStatus = async function (req, res, err) {
       return res.status(500).json("Ce user ne peut pas accéder à cette tâche");
     }
   } catch (e) {
-    return res.status(500).json("Impossible de récupérer les tâches du user : "+e.message);
+    return res.status(500).json("Impossible de récupérer les tâches du user : " + e.message);
   }
 
 }
 
-exports.deleteLinkTask = async function(req, res,err){
+exports.deleteLinkTask = async function (req, res, err) {
 
 
-  TaskModel.find({$or: [{ _id: req.body.task1 }, { _id: req.body.task2 }]}).exec(function(err, db_tasks){
+  TaskModel.find({ $or: [{ _id: req.body.task1 }, { _id: req.body.task2 }] }).exec(function (err, db_tasks) {
 
-    if(db_tasks.length != 2){
-      
+    if (db_tasks.length != 2) {
+
       return res.status(500).json("Erreur, on n'a pas exactement 2 taches correspondant à ces 2 id...")
 
     }
@@ -226,8 +229,8 @@ exports.deleteLinkTask = async function(req, res,err){
       db_tasks[1].save();
 
     }
-    
-    catch(error){
+
+    catch (error) {
       return res.status(500).send(error);
     }
 
@@ -237,12 +240,12 @@ exports.deleteLinkTask = async function(req, res,err){
 
 }
 
-exports.addLinkTask = async function(req, res, err){
+exports.addLinkTask = async function (req, res, err) {
 
-  TaskModel.find({$or: [{ _id: req.body.task1 }, { _id: req.body.task2 }]}).exec(function(err, db_tasks){
+  TaskModel.find({ $or: [{ _id: req.body.task1 }, { _id: req.body.task2 }] }).exec(function (err, db_tasks) {
 
-    if(db_tasks.length != 2){
-      
+    if (db_tasks.length != 2) {
+
       return res.status(500).json("Erreur, on n'a pas exactement 2 taches correspondant à ces 2 id...")
 
     }
@@ -256,21 +259,21 @@ exports.addLinkTask = async function(req, res, err){
       db_tasks[1].save();
 
     }
-    
-    catch(error){
+
+    catch (error) {
       return res.status(500).send(error);
     }
 
   })
 
   return res.status(200).json("ok")
-  
+
 
 }
 
-exports.getWP = async function (req, res, err){
+exports.getWP = async function (req, res, err) {
 
-  WorkPackageModel.find({tasks: req.params.id}).select(['_id','name']).exec(function(err,wp){
+  WorkPackageModel.find({ tasks: req.params.id }).select(['_id', 'name']).exec(function (err, wp) {
 
     if (err) return res.status(500).send(err);
 
@@ -280,3 +283,59 @@ exports.getWP = async function (req, res, err){
 
 
 }
+
+// Nouvelles fonctions
+
+// 1. Fonctions pour un User 'active' ou 'admin'
+
+// POST 
+
+exports.create = async function (req, res) {
+  try {
+
+    const id = tokenID(req);
+
+    // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+    try {
+      const status = await getStatus(id);
+      if (!((status == "active") || (status == "admin"))) {
+        throw new Error("the user is not 'active' or 'admin'");
+      }
+    } catch (e) {
+      return res.status(401).send({ error: e.message })
+    } 
+
+    // 2. On vérifie que tous les champs requis sont présents
+
+    if (!req.body.name|| !req.body.description|| !req.body.startingDate || !req.body.endingDate || !req.body.groups ) {
+      throw new Error("name, description, startingDate, endingDate or groups is missing");
+  }
+
+    // 3. On créée la tâche et on la sauvegarde
+    let task = {
+      name : req.body.name,
+      description : req.body.description,
+      startingDate : req.body.startingDate,
+      endingDate : req.body.endingDate,
+      groups : req.body.groups,
+      status : 'pending',
+      author : id
+    }
+
+    let createdTask = new TaskModel(task);
+    await createdTask.save()
+
+    // 4. Ajout de la tâche à chaque groupe.
+
+    let groups = (await TaskModel.findById(createdTask._id).select('groups').populate('groups')).groups
+
+    for (let group of groups) {
+      await GroupModel.findByIdAndUpdate(group._id, { $push: { tasks: createdTask._id } });
+    }
+    return res.status(200).send({ message: "La tâche a bien été créée !", task : createdTask });
+
+  } catch (e) {
+    return res.status(500).send({ error: e.message })
+  }
+}
+

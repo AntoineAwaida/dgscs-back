@@ -52,7 +52,7 @@ exports.login = function (req, res) {
         if (err) {
             return res.status(500).json({ "status": 500, "token": null, "message": err });
         }
-
+ 
         // If a user is found
         if (user) {
 

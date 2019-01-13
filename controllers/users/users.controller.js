@@ -71,7 +71,7 @@ exports.getPendingUsers = async function (req, res) {
 }
 
 // PUT
-
+ 
 exports.desactivateUser = async function (req, res) {
 
     try {

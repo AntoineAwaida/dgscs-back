@@ -13,7 +13,7 @@ const TaskSchema = new mongoose.Schema(
         files : { type : [{ type: mongoose.Schema.Types.ObjectId, ref: 'File' }], default : []},
         status: { type: String, required: true, enum: ['done', 'ongoing', 'pending'], default: 'pending' },
     } 
-);
+); 
 
 const TaskModel = mongoose.model('Task', TaskSchema)
 

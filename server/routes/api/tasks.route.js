@@ -1,12 +1,13 @@
 var express = require('express');
-var router = express.Router();
+var router = express.Router(); 
+const auth = require('../auth-payload');
+
 var TasksController = require('../../../controllers/tasks/tasks.controller');
 var FileController = require('../../../controllers/files/files.controller');
-
 var ChattaskController = require('../../../controllers/tasks/chattask.controller')
 
 
-router.post('/createtask/', TasksController.create);
+router.post('/createtask', auth, TasksController.create); // ok ?
 
 router.get('/gettasks/:userID', TasksController.getTasksFromUser);
 router.post('/gettask/:userID', TasksController.getTaskFromUser);
