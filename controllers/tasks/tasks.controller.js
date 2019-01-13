@@ -243,7 +243,7 @@ exports.getTasksFromUser = async function (req, res) {
 
     // 2. On renvoie ses tâches
 
-    const tasks = tasksFromUser(id);
+    const tasks = tasksFromUser(id); 
   
     return res.status(200).send(tasks);
 

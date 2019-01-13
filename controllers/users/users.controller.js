@@ -395,7 +395,7 @@ const getTasks = async function (userID) {
     try {
         const status = await getStatus(userID);
         let tasks;
-        if(status.equals('admin')){
+        if(status=="admin"){
             tasks = await TaskModel.find();
         }else {
             const groups = await getGroups(userID);
