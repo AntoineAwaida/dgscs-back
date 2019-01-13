@@ -393,8 +393,15 @@ const getWorkpackages = async function (userID) {
 
 const getTasks = async function (userID) {
     try {
-        const groups = await getGroups(userID);
-        const tasks = await TaskModel.find({ groups : { $in : groups }}).select(["name", "status", "author"]);
+        const status = await getStatus(userID);
+        let tasks;
+        if(status.equals('admin')){
+            tasks = await TaskModel.find();
+        }else {
+            const groups = await getGroups(userID);
+            tasks = await TaskModel.find({ groups : { $in : groups }}).select(["name", "status", "author"]);
+        }
+
         return tasks;
     } catch (e) {
         throw new Error("getTasks error -> " + e.message);
