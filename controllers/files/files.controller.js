@@ -134,7 +134,7 @@ exports.getReports = async function(req, res, err){
 
   try {
 
-    ReportModel.find().populate({path : 'files', populate : { path : 'author', select : ['first_name', 'last_name']}}).exec(function(err,reports){
+    ReportModel.find().populate({path : 'file', populate : { path : 'author', select : ['first_name', 'last_name']}}).exec(function(err,reports){
 
       return res.status(200).json(reports);
 
