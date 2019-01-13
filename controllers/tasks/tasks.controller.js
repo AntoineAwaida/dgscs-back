@@ -6,32 +6,8 @@ const tokenID = require('../users/users.controller').tokenID;
 const getStatus = require('../users/users.controller').getStatus;
 
 // ANCIENNES FONCTIONS
- 
-exports.create2 = async function (req, res, err) {
-  try {
-    // Créer la tâche
-    let task = req.body;
-    task.status = 'pending';
-    let createdTask = new TaskModel(task);
 
-    // Sauvegarder la tâche
-    await createdTask.save()
 
-    // Ajout de la tâche à chaque groupe.
-
-    let taskWithGroups = await TaskModel.findById(createdTask._id).populate('groups');
-    let groups = taskWithGroups.groups;
-    for (let i = 0; i < groups.length; i++) {
-      let group = groups[i];
-      group.tasks.push(createdTask._id);
-      await GroupModel.findByIdAndUpdate(group._id, { tasks: group.tasks });
-    }
-    return res.status(200).json("La tâche a bien été créée!");
-
-  } catch (e) {
-    return res.status(500).json("Impossible de créer la tâche");
-  }
-}
 
 exports.getTasksFromUser = async function (req, res, err) {
 
@@ -114,63 +90,6 @@ exports.getTaskFromUser = async function (req, res, err) {
 
 }
 
-
-exports.editTask = async function (req, res, err) {
-
-  try {
-    if (!req.body._id) {
-      return res.status(500).json("Il manque le paramètre '_id'");
-    }
-    else {
-
-      let taskID = req.body._id;
-      let userID = req.params.userID;
-
-      let task = await TaskModel.findById(taskID);
-      let authorID = task.author;
-
-      if (!authorID.equals(userID)) {
-        return res.status(500).json("Vous n'êtes pas l'auteur de la tâche");
-      }
-      else {
-        let taskUpdate = {};
-
-        if (req.body.description) {
-          taskUpdate.description = req.body.description;
-        }
-
-        if (req.body.name) {
-          taskUpdate.name = req.body.name;
-        }
-
-        if (req.body.startingDate) {
-          taskUpdate.startingDate = req.body.startingDate;
-        }
-
-        if (req.body.endingDate) {
-          taskUpdate.endingDate = req.body.endingDate;
-        }
-
-        if ((req.body.status) && ((req.body.status == 'pending') || (req.body.status == 'ongoing') || (req.body.status == 'done'))) {
-          taskUpdate.status = req.body.status;
-        }
-
-        if (req.body.groups) {
-          taskUpdate.groups = req.body.groups;
-        }
-
-
-        console.log(taskUpdate);
-        await TaskModel.findByIdAndUpdate(taskID, taskUpdate);
-        return res.status(200).json("User bien modifié");
-
-      }
-    }
-  } catch (e) {
-    return res.status(500).json("Impossible d'accéder à cette tâche' : " + e.message);
-  }
-
-}
 
 exports.editStatus = async function (req, res, err) {
 
@@ -303,23 +222,23 @@ exports.create = async function (req, res) {
       }
     } catch (e) {
       return res.status(401).send({ error: e.message })
-    } 
+    }
 
     // 2. On vérifie que tous les champs requis sont présents
 
-    if (!req.body.name|| !req.body.description|| !req.body.startingDate || !req.body.endingDate || !req.body.groups ) {
+    if (!req.body.name || !req.body.description || !req.body.startingDate || !req.body.endingDate || !req.body.groups) {
       throw new Error("name, description, startingDate, endingDate or groups is missing");
-  }
+    }
 
     // 3. On créée la tâche et on la sauvegarde
     let task = {
-      name : req.body.name,
-      description : req.body.description,
-      startingDate : req.body.startingDate,
-      endingDate : req.body.endingDate,
-      groups : req.body.groups,
-      status : 'pending',
-      author : id
+      name: req.body.name,
+      description: req.body.description,
+      startingDate: req.body.startingDate,
+      endingDate: req.body.endingDate,
+      groups: req.body.groups,
+      status: 'pending',
+      author: id
     }
 
     let createdTask = new TaskModel(task);
@@ -332,10 +251,140 @@ exports.create = async function (req, res) {
     for (let group of groups) {
       await GroupModel.findByIdAndUpdate(group._id, { $push: { tasks: createdTask._id } });
     }
-    return res.status(200).send({ message: "La tâche a bien été créée !", task : createdTask });
+    return res.status(200).send({ message: "La tâche a bien été créée !", task: createdTask });
 
   } catch (e) {
     return res.status(500).send({ error: e.message })
   }
 }
 
+// 2. Fonctions pour un user 'author' de la tâche ou 'admin'
+
+// PUT
+
+exports.editTask2 = async function (req, res) {
+
+  try {
+    if (!req.body._id) {
+      return res.status(500).json("Il manque le paramètre '_id'");
+    }
+    else {
+
+      let taskID = req.body._id;
+      let userID = req.params.userID;
+
+      let task = await TaskModel.findById(taskID);
+      let authorID = task.author;
+
+      if (!authorID.equals(userID)) {
+        return res.status(500).json("Vous n'êtes pas l'auteur de la tâche");
+      }
+      else {
+        let taskUpdate = {};
+
+        if (req.body.description) {
+          taskUpdate.description = req.body.description;
+        }
+
+        if (req.body.name) {
+          taskUpdate.name = req.body.name;
+        }
+
+        if (req.body.startingDate) {
+          taskUpdate.startingDate = req.body.startingDate;
+        }
+
+        if (req.body.endingDate) {
+          taskUpdate.endingDate = req.body.endingDate;
+        }
+
+        if ((req.body.status) && ((req.body.status == 'pending') || (req.body.status == 'ongoing') || (req.body.status == 'done'))) {
+          taskUpdate.status = req.body.status;
+        }
+
+        if (req.body.groups) {
+          taskUpdate.groups = req.body.groups;
+        }
+
+
+        console.log(taskUpdate);
+        await TaskModel.findByIdAndUpdate(taskID, taskUpdate);
+        return res.status(200).json("User bien modifié");
+
+      }
+    }
+  } catch (e) {
+    return res.status(500).json("Impossible d'accéder à cette tâche' : " + e.message);
+  }
+
+}
+
+exports.editTask = async function (req, res) {
+
+  try {
+
+    if (!req.body._id) {
+      throw new Error("L'attribut '_id' est manquant");
+    }
+
+    const id = tokenID(req);
+    const taskID = req.body._id;
+
+    // 1. Permissions : On vérifie qu'il est bien ('actif' et auteur) ou 'admin'
+    try {
+
+      // a. On récupère l'auteur de la tâche
+
+      const author = (await TaskModel.findById(taskID).select('author'))._id;
+
+      // b. On vérifie qu'il est bien ('actif' et auteur) ou 'admin'
+      const status = await getStatus(id);
+      if (status != "admin") {
+        if (status != 'active') {
+          throw new Error("the user is not 'active' or 'admin'");
+        }
+        else {
+          // c. Si il est actif mais pas admin, on vérifie que c'est bien l'auteur de la tâche
+          if (author != id) {
+            throw new Error("The user is not the author of the task");
+          }
+        }
+
+      }
+    } catch (e) {
+      return res.status(401).send({ error: e.message })
+    }
+
+    // 2. On modifie la tâche
+
+    let taskUpdate = {};
+    if (req.body.description) {
+      taskUpdate.description = req.body.description;
+    }
+    if (req.body.name) {
+      taskUpdate.name = req.body.name;
+    }
+    if (req.body.startingDate) {
+      taskUpdate.startingDate = req.body.startingDate;
+    }
+    if (req.body.endingDate) {
+      taskUpdate.endingDate = req.body.endingDate;
+    }
+    if ((req.body.status) && ((req.body.status == 'pending') || (req.body.status == 'ongoing') || (req.body.status == 'done'))) {
+      taskUpdate.status = req.body.status;
+    }
+    if (req.body.groups) {
+      taskUpdate.groups = req.body.groups;
+    } 
+
+    await TaskModel.findByIdAndUpdate(taskID, taskUpdate);
+    return res.status(200).send({message : "Tâche bien modifiée"});
+
+  }
+  catch (e) {
+    return res.status(500).send({ error: e.message })
+  }
+
+}
+
+ 
