@@ -4,7 +4,7 @@ const AnnounceModel = require('../../models/announce')
 exports.getAll = async function (req, res, err) {
 
 
-    AnnounceModel.find().populate('author').sort({date:-1}).exec(function(err,announces){
+    AnnounceModel.find().populate('author').sort({date:-1}).populate('author').exec(function(err,announces){
   
       if(err) return res.status(500).send(err);
   
