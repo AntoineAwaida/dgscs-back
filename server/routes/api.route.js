@@ -7,6 +7,7 @@ var workpackages = require('./api/workpackages.route');
 var tasks = require('./api/tasks.route');
 var announces = require('./api/announces.route');
 var files = require('./api/file.route');
+var reports =require('./api/reports.route');
 
 
 router.use('/users', users);
@@ -15,5 +16,6 @@ router.use('/workpackages',workpackages);
 router.use('/tasks', tasks);
 router.use('/announces',announces);
 router.use('/files',files);
+router.use('/reports',reports);
 
 module.exports = router;
