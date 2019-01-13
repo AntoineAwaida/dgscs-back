@@ -20,6 +20,11 @@ router.post('/file/:taskID', FileController.uploadTaskFile);
 router.post('/savechat', ChattaskController.save);
 router.get('/getchat/:id',ChattaskController.getChat)
 
+router.put('/deletelinktask', TasksController.deleteLinkTask)
+
+router.put('/addlinktask', TasksController.addLinkTask)
+
+router.get('/getwp/:id', TasksController.getWP)
 
 
 module.exports = router;

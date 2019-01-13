@@ -1,6 +1,6 @@
 const TaskModel = require('../../models/task');
 const GroupModel = require('../../models/group');
-const workPackageModel = require('../../models/workpackage');
+const WorkPackageModel = require('../../models/workpackage');
 const UserModel = require('../../models/user');
 
 
@@ -97,6 +97,7 @@ exports.getTaskFromUser = async function (req, res, err) {
             task = await TaskModel.findById(task._id)
                 .populate({ path: 'author', select: ['first_name', 'last_name'] })
                 .populate({ path : 'groups', select:'name' })
+                .populate('tasks')
                 .populate({ path : 'files', populate : { path: 'author', select: ['first_name', 'last_name'] } });
             return res.status(200).send(task);
           }
@@ -200,5 +201,82 @@ exports.editStatus = async function (req, res, err) {
   } catch (e) {
     return res.status(500).json("Impossible de récupérer les tâches du user : "+e.message);
   }
+
+}
+
+exports.deleteLinkTask = async function(req, res,err){
+
+
+  TaskModel.find({$or: [{ _id: req.body.task1 }, { _id: req.body.task2 }]}).exec(function(err, db_tasks){
+
+    if(db_tasks.length != 2){
+      
+      return res.status(500).json("Erreur, on n'a pas exactement 2 taches correspondant à ces 2 id...")
+
+    }
+
+    db_tasks[0].tasks = db_tasks[0].tasks.filter((e) => e.toString() != db_tasks[1]._id.toString());
+    db_tasks[1].tasks = db_tasks[1].tasks.filter((e) => e.toString() != db_tasks[0]._id.toString());
+
+
+
+    try {
+
+      db_tasks[0].save();
+      db_tasks[1].save();
+
+    }
+    
+    catch(error){
+      return res.status(500).send(error);
+    }
+
+  })
+
+  return res.status(200).json("ok")
+
+}
+
+exports.addLinkTask = async function(req, res, err){
+
+  TaskModel.find({$or: [{ _id: req.body.task1 }, { _id: req.body.task2 }]}).exec(function(err, db_tasks){
+
+    if(db_tasks.length != 2){
+      
+      return res.status(500).json("Erreur, on n'a pas exactement 2 taches correspondant à ces 2 id...")
+
+    }
+
+    db_tasks[0].tasks.push(db_tasks[1]._id);
+    db_tasks[1].tasks.push(db_tasks[0]._id);
+
+    try {
+
+      db_tasks[0].save();
+      db_tasks[1].save();
+
+    }
+    
+    catch(error){
+      return res.status(500).send(error);
+    }
+
+  })
+
+  return res.status(200).json("ok")
+  
+
+}
+
+exports.getWP = async function (req, res, err){
+
+  WorkPackageModel.find({tasks: req.params.id}).select(['_id','name']).exec(function(err,wp){
+
+    if (err) return res.status(500).send(err);
+
+    return res.status(200).json(wp);
+
+  })
+
 
 }
