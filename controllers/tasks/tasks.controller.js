@@ -68,7 +68,7 @@ exports.getTaskFromUser = async function (req, res, err) {
       const taskID = req.body.taskID;
       const userID = req.params.userID;
 
-      let task = task = await TaskModel.findById(taskID)
+      let task = await TaskModel.findById(taskID)
               .populate({ path: 'author', select: ['first_name', 'last_name'] })
               .populate({ path: 'groups', select: 'name' })
               .populate('tasks')
