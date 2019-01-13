@@ -442,9 +442,8 @@ const isAdmin = async function (userID) {
 
 const mustBeAdmin = async function (userID) {
     try {
-        const admin = await isAdmin(userID);
         const status = await getStatus(userID);
-        if (!admin) {
+        if (status!="admin") {
             throw new Error("the user is not admin : "+status);
         }
     } catch (e) {
