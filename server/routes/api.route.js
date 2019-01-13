@@ -15,5 +15,6 @@ router.use('/workpackages',workpackages);
 router.use('/tasks', tasks);
 router.use('/announces',announces);
 router.use('/files',files);
+router.use('/reports',reports);
 
 module.exports = router;

@@ -9,6 +9,7 @@ const WorkPackageModel = require('../../models/workpackage');
 const FileModel = require('../../models/file');
 const TaskModel = require('../../models/task');
 const UserModel = require('../../models/user');
+const ReportModel = require('../../models/report')
 
 const store = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -102,6 +103,30 @@ exports.uploadWorkPackageFile = async function(req, res, err) {
   catch(e){
     return res.status(500).json({ error : e.message });
   }
+}
+
+exports.uploadReportFile = async function(req, res,err){
+
+  try {
+
+    file = await uploadFile(req,res, err);
+
+    //4. On enregistre le fichier dans la table compte-rendus
+
+    const db_file = new FileModel({file: file._id});
+
+    db_file.save();
+
+    return res.status(200).json({file: file});
+
+  }
+
+  catch(e){
+
+    return res.status(500).json({error: e.message })
+
+  }
+
 }
 
 
