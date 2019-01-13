@@ -130,6 +130,24 @@ exports.uploadReportFile = async function(req, res,err){
 }
 
 
+exports.getReports = async function(req, res, err){
+
+  try {
+
+    ReportModel.find().populate({path : 'files', populate : { path : 'author', select : ['first_name', 'last_name']}}).exec(function(err,reports){
+
+      return res.status(200).json(reports);
+
+    })
+
+  }
+  catch(e) {
+    return res.status(500).json({error : e.message});
+  }
+
+}
+
+
 exports.getFile = async function (req, res, err) {
   const fileURL = decodeURIComponent(req.params.fileURL);
   try {
