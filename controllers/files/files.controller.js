@@ -113,7 +113,7 @@ exports.uploadReportFile = async function(req, res,err){
 
     //4. On enregistre le fichier dans la table compte-rendus
 
-    const db_file = new FileModel({file: file._id});
+    const db_file = new ReportModel({file: file._id});
 
     db_file.save();
 
