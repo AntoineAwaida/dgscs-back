@@ -115,12 +115,12 @@ exports.getTaskFromUser = async function (req, res, err) {
 exports.editTask = async function (req, res, err) {
 
   try {
-    if (!req.body.taskID) {
-      return res.status(500).json("Il manque le paramètre 'taskID'");
+    if (!req.body._id) {
+      return res.status(500).json("Il manque le paramètre '_id'");
     }
     else {
     
-      let taskID = req.body.taskID;
+      let taskID = req.body._id;
       let userID = req.params.userID;
 
       let task = await TaskModel.findById(taskID);
