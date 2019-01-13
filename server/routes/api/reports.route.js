@@ -6,6 +6,6 @@ const FileController = require('../../../controllers/files/files.controller');
 
 router.post('/file/:reportID', FileController.uploadReportFile);
 
-router.get('/getreports', FileController.getReports);
+router.get('/get3lastreports', FileController.get3LastReports);
 
 module.exports = router
