@@ -458,7 +458,7 @@ const getActiveTasks = async function (userID) {
         const status = await getStatus(userID);
         let tasks;
         if(status=="admin"){
-            tasks = await TaskModel.find();
+            tasks = await TaskModel.find({status: { $ne: 'done' }});
         }else {
             const groups = await getGroups(userID);
             tasks = await TaskModel.find({ groups : { $in : groups }, status: { $ne: 'done' }}).select(["name", "status", "author"]);
@@ -479,7 +479,7 @@ const getFinishedTasks = async function (userID) {
         const status = await getStatus(userID);
         let tasks;
         if(status=="admin"){
-            tasks = await TaskModel.find();
+            tasks = await TaskModel.find({status:'done'});
         }else {
             const groups = await getGroups(userID);
             tasks = await TaskModel.find({ groups : { $in : groups }, status: 'done'}).select(["name", "status", "author"]);
