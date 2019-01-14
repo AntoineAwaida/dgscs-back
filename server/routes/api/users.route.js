@@ -31,6 +31,8 @@ router.get('/mytasks', auth, UsersController.getMyTasks); // ok
 router.get('/myfavs', auth, UsersController.getMyFavs); // ok
 router.get('/myfiles', auth, UsersController.getMyFiles);  // ok
 
+router.get('/myactivetasks', auth, UsersController.getMyActiveTasks) //ok
+router.get('/myfinishedtasks', auth, UsersController.getMyFinishedTasks) //ok
 
 // Endpoints pour modifier ses données
 

@@ -175,6 +175,68 @@ exports.getMyWorkpackages = async function (req, res) {
     }
 }
 
+exports.getMyActiveTasks = async function(req, res){
+
+    try {
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+        try {
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+
+        // 2. On renvoie tous les tasks du user
+
+        const tasks = await getActiveTasks(id);
+
+
+        return res.status(200).send(tasks);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+
+
+
+}
+
+exports.getMyFinishedTasks = async function(req, res){
+
+    try {
+        const id = tokenID(req);
+
+        // 1. On vérifie qu'il est bien 'actif' ou 'admin'
+        try {
+            const status = await getStatus(id);
+            if (!((status == "active") || (status == "admin"))) {
+                throw new Error("the user is not 'active' or 'admin'");
+            }
+        } catch (e) {
+            return res.status(401).send({ error: e.message })
+        }
+
+
+        // 2. On renvoie tous les tasks du user
+
+        const tasks = await getFinishedTasks(id);
+
+
+        return res.status(200).send(tasks);
+
+    } catch (e) {
+        return res.status(500).send({ error: e.message })
+    }
+
+
+
+}
+
 exports.getMyTasks = async function (req, res) {
     try {
         const id = tokenID(req);
@@ -390,6 +452,48 @@ const getWorkpackages = async function (userID) {
         throw new Error("getWorkpackages error -> " + e.message);
     }  
 } 
+
+const getActiveTasks = async function (userID) {
+    try {
+        const status = await getStatus(userID);
+        let tasks;
+        if(status=="admin"){
+            tasks = await TaskModel.find();
+        }else {
+            const groups = await getGroups(userID);
+            tasks = await TaskModel.find({ groups : { $in : groups }, status: { $ne: 'done' }}).select(["name", "status", "author"]);
+        }
+
+        return tasks;
+    } catch (e) {
+        throw new Error("getTasks error -> " + e.message);
+    } 
+
+
+
+
+}
+
+const getFinishedTasks = async function (userID) {
+    try {
+        const status = await getStatus(userID);
+        let tasks;
+        if(status=="admin"){
+            tasks = await TaskModel.find();
+        }else {
+            const groups = await getGroups(userID);
+            tasks = await TaskModel.find({ groups : { $in : groups }, status: 'done'}).select(["name", "status", "author"]);
+        }
+
+        return tasks;
+    } catch (e) {
+        throw new Error("getTasks error -> " + e.message);
+    } 
+
+
+
+
+}
 
 const getTasks = async function (userID) {
     try {
